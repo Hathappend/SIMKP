@@ -40,7 +40,7 @@ class AuthenticatedSessionController extends Controller
             return redirect()->route('mahasiswa.dashboard');
         }
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        return redirect('/');
     }
 
     /**
