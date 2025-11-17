@@ -26,7 +26,7 @@
             <span>Dashboard</span>
         </a>
 
-        <a href="#"
+        <a href="{{ route('admin.registration.create') }}"
            class="flex items-center space-x-3 py-3 px-4 rounded-lg transition
            {{ request()->is('admin/pengajuan*') ? 'bg-[#1B2A52] text-white' : 'hover:bg-[#1B2A52] hover:text-white' }}">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">

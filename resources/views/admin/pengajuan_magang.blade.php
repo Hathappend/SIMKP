@@ -2,92 +2,198 @@
 
 @section('content')
 
-    <h1 class="text-3xl font-semibold text-gray-800 mb-6">Pengajuan Magang</h1>
+    <h1 class="text-3xl font-semibold text-gray-800 mb-10 mt-12 md:mx-12">
+        Pengajuan Magang
+    </h1>
 
-    <div class="bg-white rounded-lg shadow-md overflow-hidden">
-        <table class="w-full min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
+    @php
+        $fields = [
+            'full_name',
+            'study_program',
+            'university',
+            'application_status',
+            'letter_status',
+            'created_at',
+            'created_at_text'
+        ];
+    @endphp
+
+    {{-- SEARCH + FILTER (Alpine) --}}
+    <div
+
+        class="flex justify-end items-center mb-4 md:mx-12 mt-4 gap-3">
+
+        @php
+            $fields = ['full_name','study_program','university','application_status','letter_status','created_at'];
+            $filters = [
+                ['key'=>'application_status','label'=>'Status Pengajuan','type'=>'checkbox-list','open'=>true,
+                    'options'=>[
+                        ['value'=>'pending','label'=>'Menunggu'],
+                        ['value'=>'waiting','label'=>'Sedang Ditinjau'],
+                        ['value'=>'approved','label'=>'Diterima'],
+                        ['value'=>'rejected','label'=>'Ditolak'],
+                    ]
+                ],
+                ['key'=>'letter_status','label'=>'Status Surat','type'=>'checkbox-list','options'=>[
+                        ['value'=>'waiting','label'=>'Belum Dibuat'],
+                        ['value'=>'in progress','label'=>'Sedang Dibuat'],
+                        ['value'=>'completed','label'=>'Selesai'],
+                    ]
+                ],
+                ['key'=>'created_at','label'=>'Tanggal Pengajuan','type'=>'date-range']
+            ];
+        @endphp
+
+        <x-filter-bar :fields="$fields" :filters="$filters" table="#applicationsTable" />
+
+    </div>
+
+
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden md:mx-12 mb-20">
+
+        <table id="applicationsTable" class="w-full min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-100">
             <tr>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Mahasiswa</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIM</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Universitas</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Program Studi</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Divisi Tujuan</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Pengajuan</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">No</th>
+                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Nama Mahasiswa</th>
+                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Program Studi</th>
+                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Universitas</th>
+                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Divisi Tujuan</th>
+                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Tanggal Pengajuan</th>
+                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Pengajuan</th>
+                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Surat</th>
+                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Aksi</th>
             </tr>
             </thead>
+
             <tbody class="bg-white divide-y divide-gray-200">
 
-            <tr>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">1</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Endang Sudrajat</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">10231223</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">UNIKOM</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Teknik Informatika</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Aplikasi Informatika</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">11 Nov 2025</td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                            Menunggu Verifikasi
-                        </span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                    <button class="text-green-600 hover:text-green-900">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                    </button>
-                    <button class="text-red-600 hover:text-red-900">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                    </button>
-                </td>
-            </tr>
+            @forelse ($applications as $i => $app)
+                <tr
+                    data-full_name="{{ strtolower($app->full_name) }}"
+                    data-study_program="{{ strtolower($app->study_program) }}"
+                    data-university="{{ strtolower($app->university) }}"
+                    data-created_at="{{ \Carbon\Carbon::parse($app->created_at)->format('Y-m-d') }}"
+                    data-created_at_text="{{ strtolower(\Carbon\Carbon::parse($app->created_at)->translatedFormat('d M Y')) }}"
+                    data-application_status="{{ strtolower($app->application_status) }}"
+                    data-letter_status="{{ strtolower($app->letter_status) }}"
+                    class="hover:bg-gray-50 transition">
 
-            <tr>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Endang Sudrajat</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">10231223</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">UNIKOM</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Teknik Informatika</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Aplikasi Informatika</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">11 Nov 2025</td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                    {{-- NOMOR --}}
+                    <td class="px-6 py-4 text-sm text-gray-600">
+                        {{ $i + 1 }}
+                    </td>
+
+                    {{-- NAMA --}}
+                    <td class="px-6 py-4 text-sm font-medium text-gray-900">
+                        {{ $app->full_name }}
+                    </td>
+
+                    {{-- PRODI --}}
+                    <td class="px-6 py-4 text-sm text-gray-600">
+                        {{ $app->study_program }}
+                    </td>
+
+                    {{-- UNIVERSITAS --}}
+                    <td class="px-6 py-4 text-sm text-gray-600">
+                        {{ $app->university }}
+                    </td>
+
+                    {{-- DIVISI --}}
+                    <td class="px-6 py-4 text-sm text-gray-600">
+{{--                        {{ $app->divisi_tujuan }}--}}
+                        Aplikasi Informatika
+                    </td>
+
+                    {{-- TANGGAL PENGAJUAN --}}
+                    <td class="px-6 py-4 text-sm text-gray-600">
+                        {{ \Carbon\Carbon::parse($app->created_at)->format('d M Y') }}
+                    </td>
+
+                    {{-- STATUS Pengajuan BADGE --}}
+                    <td class="px-6 py-4">
+
+                        @if($app->application_status === 'approved')
+                            <span class="inline-flex items-center px-3 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">
+                            <svg class="mr-2 -ml-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
                             Disetujui
                         </span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                    <button class="text-blue-600 hover:text-blue-900">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.536L16.732 3.732z"></path></svg>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.536L16.732 3.732z"></path></svg>
-                    </button>
-                    <button class="text-gray-500 hover:text-gray-700">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                    </button>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">3</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Endang Sudrajat</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">10231223</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">UNIKOM</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Teknik Informatika</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Aplikasi Informatika</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">11 Nov 2025</td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                        @elseif($app->application_status === 'rejected')
+                            <span class="inline-flex items-center px-3 py-1 bg-red-100 text-red-800 text-xs font-medium rounded-full">
+                            <svg class="mr-2 -ml-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg>
                             Ditolak
                         </span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
-                    -
-                </td>
-            </tr>
+                        @elseif($app->application_status === 'waiting')
+                            <span class="inline-flex items-center px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full">
+                            <svg class="mr-2 -ml-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.33-.266 2.98-1.742 2.98H4.42c-1.476 0-2.492-1.65-1.742-2.98l5.58-9.92zM10 13a1 1 0 100-2 1 1 0 000 2zm-1-4a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clip-rule="evenodd"></path></svg>
+                            Sedang ditinjau
+                        </span>
+                        @else
+                            <span class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
+                            <svg class="mr-2 -ml-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 102 0V6zM10 14a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path></svg>
+                            Menunggu
+                        </span>
+                        @endif
+
+                    </td>
+
+                    {{-- STATUS Surat BADGE --}}
+                    <td class="px-6 py-4">
+                        @if($app->letter_status === 'completed')
+                            <span class="inline-flex items-center px-3 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">
+                            <svg class="mr-2 -ml-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            Disetujui
+                        </span>
+                        @elseif($app->letter_status === 'in progress')
+                            <span class="inline-flex items-center px-3 py-1 bg-red-100 text-red-800 text-xs font-medium rounded-full">
+                            <svg class="mr-2 -ml-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg>
+                            Ditolak
+                        </span>
+                        @else
+                            <span class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
+                            <svg class="mr-2 -ml-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 102 0V6zM10 14a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path></svg>
+                            Belum Dibuat
+                        </span>
+                        @endif
+                    </td>
+
+                    {{-- AKSI BUTTONS --}}
+                    <td class="px-6 py-4 text-sm flex items-center gap-3">
+
+                        {{-- DETAIL --}}
+                        <a href="{{ route("admin.pengajuan.show", $app->id) }}"
+                           class="p-2 rounded-xl bg-gray-50 border border-gray-200
+          hover:bg-gray-100 hover:border-gray-300 transition-all duration-150"
+                           title="Lihat Detail">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                 viewBox="0 0 24 24" stroke-width="1.7"
+                                 stroke="currentColor" class="w-5 h-5 text-gray-700">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                            </svg>
+                        </a>
+
+                    </td>
+                </tr>
+
+                <tr id="noDataMessage" class="hidden">
+                    <td colspan="100%" class="py-10">
+                        <div class="flex flex-col items-center justify-center text-gray-500">
+                            <img src="{{ asset('images/empty.jpg') }}" class="h-24 opacity-70 mb-3" alt="">
+                            <p class="text-lg font-semibold">Data tidak ditemukan</p>
+                            <p class="text-sm text-gray-400 mt-1">Coba periksa kata kunci atau filter yang digunakan.</p>
+                        </div>
+                    </td>
+                </tr>
+
+            @empty
+
+            @endforelse
 
             </tbody>
         </table>
-    </div>
 
+    </div>
 @endsection
