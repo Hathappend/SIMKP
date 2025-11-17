@@ -21,8 +21,10 @@ return new class extends Migration
             $table->date('end_date');
             $table->string('internship_letter')->nullable();
             $table->string('kesbangpol_letter')->nullable();
-            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->enum('application_status', ['pending', 'waiting', 'approved', 'rejected'])->default('pending');
+            $table->enum('letter_status', ['waiting', 'in progress', 'completed'])->default('pending');
             $table->string('email');
+            $table->text('rejection_note')->nullable()->default(null);
             $table->timestamps();
         });
     }

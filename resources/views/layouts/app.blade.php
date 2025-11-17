@@ -8,6 +8,7 @@
 </head>
 
 <body class="bg-white">
+<x-toast />
 
 <!-- Root Alpine State -->
 <div
