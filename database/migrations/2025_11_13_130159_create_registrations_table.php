@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('full_name');
             $table->string('nim');
             $table->string('study_program');
+            $table->string('university');
             $table->date('start_date');
             $table->date('end_date');
             $table->string('internship_letter')->nullable();
