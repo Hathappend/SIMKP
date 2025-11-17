@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\DivisionController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegistrationController;
@@ -34,13 +35,21 @@ Route::middleware(['auth', 'role:pembimbing'])->prefix('pembimbing')->group(func
     Route::get('/dashboard', [PembimbingDashboard::class, 'index'])->name('pembimbing.dashboard');
 });
 
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
-    Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('admin.dashboard');
-    Route::get('/pengajuan-kp', [RegistarVerification::class, 'create'])->name('admin.registration.create');
-    Route::get('/pengajuan/detail/{id}', [RegistarVerification::class, 'show'])->name('admin.pengajuan.show');
-    Route::get('/pengajuan/{registration}/forward', [RegistarVerification::class, 'forward'])->name('admin.pengajuan.forward');
-    Route::post('/pengajuan/{registration}/reject', [RegistarVerification::class, 'reject'])->name('admin.pengajuan.reject');
-    Route::delete('/pengajuan/{registration}/archive', [RegistarVerification::class, 'archive'])->name('admin.pengajuan.archive');
+Route::middleware(['auth', 'role:admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+    Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
+
+    Route::get('/pengajuan-kp', [RegistarVerification::class, 'create'])->name('registration.create');
+    Route::get('/pengajuan/detail/{id}', [RegistarVerification::class, 'show'])->name('pengajuan.show');
+    Route::get('/pengajuan/{registration}/forward', [RegistarVerification::class, 'forward'])->name('pengajuan.forward');
+    Route::post('/pengajuan/{registration}/reject', [RegistarVerification::class, 'reject'])->name('pengajuan.reject');
+    Route::delete('/pengajuan/{registration}/archive', [RegistarVerification::class, 'archive'])->name('pengajuan.archive');
+
+    Route::resource('divisi', DivisionController::class)->parameters(['divisi' => 'division'])->except(['show', 'create', 'edit']);
+
+
 });
 
 Route::middleware(['auth', 'role:kepala_divisi'])->prefix('kepala-divisi')->group(function () {
