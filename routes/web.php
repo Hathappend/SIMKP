@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DivisionController;
+use App\Http\Controllers\admin\UserController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegistrationController;
@@ -48,6 +49,7 @@ Route::middleware(['auth', 'role:admin'])
     Route::delete('/pengajuan/{registration}/archive', [RegistarVerification::class, 'archive'])->name('pengajuan.archive');
 
     Route::resource('divisi', DivisionController::class)->parameters(['divisi' => 'division'])->except(['show', 'create', 'edit']);
+    Route::resource('user', UserController::class)->except(['show', 'create', 'edit']);
 
 
 });
