@@ -2,6 +2,8 @@
 
 namespace App\Mail;
 
+use App\Models\Division;
+use App\Models\Mentor;
 use App\Models\Registration;
 use App\Models\Student;
 use Illuminate\Bus\Queueable;
@@ -11,20 +13,20 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class RejectionMail extends Mailable
+class RegistrationApproved extends Mailable
 {
     use Queueable, SerializesModels;
 
     public Registration $registration;
-    public Student $student;
+    public ?string $password;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(Registration $registration)
+    public function __construct(Registration $registration, ?string $password = null)
     {
         $this->registration = $registration;
-        $this->student =  $registration->student;
+        $this->password = $password;
     }
 
     /**
@@ -33,7 +35,7 @@ class RejectionMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Status Pengajuan Magang Anda',
+            subject: 'Selamat! Pengajuan Magang Anda Diterima',
         );
     }
 
@@ -43,7 +45,7 @@ class RejectionMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.registration_rejection',
+            view: 'emails.registration_approved',
         );
     }
 

@@ -17,30 +17,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-//        User::factory()->create([
-//            'name' => 'Test User',
-//            'email' => 'test@example.com',
-//        ]);
-        // Buat Role
-        $roles = ['admin', 'pembimbing', 'kepala_divisi', 'mahasiswa'];
-
-        foreach ($roles as $role) {
-            Role::firstOrCreate(['name' => $role]);
-        }
-
-        // Buat User + Assign Role
-        $admin = User::where('name', 'admin')->first();
-        $admin->assignRole('admin');
-
-        $pembimbing = User::where('name', 'pembimbing')->first();
-        $pembimbing->assignRole('pembimbing');
-
-        $kepala = User::where('name', 'kepala divisi')->first();
-        $kepala->assignRole('kepala_divisi');
-
-        $mahasiswa = User::where('name', 'mahasiswa')->first();
-        $mahasiswa->assignRole('mahasiswa');
+        $this->call([
+            DivisionSeeder::class,
+            UserSeeder::class,
+            RoleSeeder::class,
+        ]);
     }
 }

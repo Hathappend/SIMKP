@@ -24,7 +24,7 @@ class UserController extends Controller
     {
         $users = User::with('division', 'roles')->latest()->get();
         $divisions = Division::orderBy('name')->get();
-        $roles = Role::all();
+        $roles = Role::whereIn('name', ['admin', 'kepala_divisi'])->get();
 
         return view('admin.user.create', compact('users', 'divisions', 'roles'));
     }

@@ -19,7 +19,7 @@
             {{-- Judul --}}
             <div class="w-full md:w-auto">
                 <h1 class="text-3xl font-bold text-gray-800 tracking-tight">Kelola Pengguna</h1>
-                <p class="mt-1 text-sm text-gray-500">Manajemen akun untuk seluruh pengguna.</p>
+                <p class="mt-1 text-sm text-gray-500">Manajemen akun untuk Admin & Kepala Divisi.</p>
             </div>
 
             {{-- SEARCH + FILTER (Alpine Component) --}}
@@ -199,7 +199,7 @@
 
                     <div class="p-6 space-y-4">
                         <h3 class="text-xl font-semibold text-gray-900 mb-1">Tambah User Baru</h3>
-                        <p class="text-gray-600 -mt-3">Buat akun baru untuk pengguna.</p>
+                        <p class="text-gray-600 -mt-3">Buat akun baru untuk Admin & Kepala Divisi.</p>
 
                         {{-- Field Nama Lengkap --}}
                         <div>

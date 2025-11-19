@@ -2,66 +2,55 @@
 
 @section('content')
 
-    <h1 class="text-3xl font-semibold text-gray-800 mb-10 mt-12 md:mx-12">
-        Pengajuan Magang
-    </h1>
+    <div class="w-full md:w-auto md:mx-12 mt:12 md:mt-12">
+        <h1 class="text-3xl font-bold text-gray-800 tracking-tight">Pengajuan Magang</h1>
+        <p class="mt-1 text-gray-600">Daftar semua mahasiswa yang mendaftar magang.</p>
+    </div>
 
-    @php
-        $fields = [
-            'full_name',
-            'study_program',
-            'university',
-            'application_status',
-            'letter_status',
-            'created_at',
-            'created_at_text'
-        ];
-    @endphp
+    <div class="flex flex-col md:flex-row justify-end items-end md:items-center mb-6 mt-10 md:mt-12 md:mx-12 gap-4">
 
-    {{-- SEARCH + FILTER (Alpine) --}}
-    <div
+        {{-- SEARCH + FILTER --}}
+        <div class="flex items-center gap-3 w-full md:w-auto justify-end">
+            @php
+                $fields = ['student_name', 'study_program', 'university', 'division_name', 'created_at'];
 
-        class="flex justify-end items-center mb-4 md:mx-12 mt-4 gap-3">
+                $filters = [
+                    ['key'=>'application_status','label'=>'Status Pengajuan','type'=>'checkbox-list','open'=>true,
+                        'options'=>[
+                            ['value'=>'pending','label'=>'Menunggu'],
+                            ['value'=>'waiting','label'=>'Sedang Ditinjau'],
+                            ['value'=>'approved','label'=>'Diterima'],
+                            ['value'=>'rejected','label'=>'Ditolak'],
+                        ]
+                    ],
+                    ['key'=>'letter_status','label'=>'Status Surat','type'=>'checkbox-list','options'=>[
+                            ['value'=>'waiting','label'=>'Belum Dibuat'],
+                            ['value'=>'in progress','label'=>'Sedang Dibuat'],
+                            ['value'=>'completed','label'=>'Selesai'],
+                        ]
+                    ],
 
-        @php
-            $fields = ['full_name','study_program','university','application_status','letter_status','created_at'];
-            $filters = [
-                ['key'=>'application_status','label'=>'Status Pengajuan','type'=>'checkbox-list','open'=>true,
-                    'options'=>[
-                        ['value'=>'pending','label'=>'Menunggu'],
-                        ['value'=>'waiting','label'=>'Sedang Ditinjau'],
-                        ['value'=>'approved','label'=>'Diterima'],
-                        ['value'=>'rejected','label'=>'Ditolak'],
-                    ]
-                ],
-                ['key'=>'letter_status','label'=>'Status Surat','type'=>'checkbox-list','options'=>[
-                        ['value'=>'waiting','label'=>'Belum Dibuat'],
-                        ['value'=>'in progress','label'=>'Sedang Dibuat'],
-                        ['value'=>'completed','label'=>'Selesai'],
-                    ]
-                ],
-                ['key'=>'created_at','label'=>'Tanggal Pengajuan','type'=>'date-range']
-            ];
-        @endphp
+                    ['key'=>'created_at','label'=>'Tanggal Pengajuan','type'=>'date-range']
+                ];
+            @endphp
 
-        <x-filter-bar :fields="$fields" :filters="$filters" table="#applicationsTable" />
-
+            <x-filter-bar :fields="$fields" :filters="$filters" table="#applicationsTable" />
+        </div>
     </div>
 
 
-    <div class="bg-white rounded-lg shadow-lg overflow-hidden md:mx-12 mb-20">
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden md:mx-12 mb-20 border border-gray-100">
 
         <table id="applicationsTable" class="w-full min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-100">
+            <thead class="bg-gray-50">
             <tr>
-                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">No</th>
-                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Nama Mahasiswa</th>
-                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Program Studi</th>
-                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Universitas</th>
+                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider w-16">No</th>
+                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Mahasiswa</th>
+                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Asal Kampus</th>
                 <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Divisi Tujuan</th>
-                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Tanggal Pengajuan</th>
-                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Pengajuan</th>
-                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Surat</th>
+                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Tanggal</th>
+                <th class="px-6 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Status Pengajuan</th>
+                <th class="px-6 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Status Surat</th>
                 <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Aksi</th>
             </tr>
             </thead>
@@ -70,49 +59,42 @@
 
             @forelse ($applications as $i => $app)
                 <tr
-                    data-full_name="{{ strtolower($app->full_name) }}"
-                    data-study_program="{{ strtolower($app->study_program) }}"
-                    data-university="{{ strtolower($app->university) }}"
+                    class="hover:bg-gray-50 transition group"
+                    data-student_name="{{ strtolower($app->student->name) }}"
+                    data-study_program="{{ strtolower($app->student->study_program) }}"
+                    data-university="{{ strtolower($app->student->university) }}"
+                    data-division_name="{{ strtolower($app->division->name ?? '-') }}"
                     data-created_at="{{ \Carbon\Carbon::parse($app->created_at)->format('Y-m-d') }}"
-                    data-created_at_text="{{ strtolower(\Carbon\Carbon::parse($app->created_at)->translatedFormat('d M Y')) }}"
                     data-application_status="{{ strtolower($app->application_status) }}"
                     data-letter_status="{{ strtolower($app->letter_status) }}"
-                    class="hover:bg-gray-50 transition">
+                >
 
                     {{-- NOMOR --}}
-                    <td class="px-6 py-4 text-sm text-gray-600">
-                        {{ $i + 1 }}
-                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-600">{{ $i + 1 }}</td>
 
-                    {{-- NAMA --}}
-                    <td class="px-6 py-4 text-sm font-medium text-gray-900">
-                        {{ $app->full_name }}
-                    </td>
-
-                    {{-- PRODI --}}
-                    <td class="px-6 py-4 text-sm text-gray-600">
-                        {{ $app->study_program }}
+                    {{-- MAHASISWA --}}
+                    <td class="px-6 py-4">
+                        <div class="text-sm font-medium text-gray-900">{{ $app->student->name }}</div>
+                        <div class="text-xs text-gray-500">{{ $app->student->study_program }}</div>
                     </td>
 
                     {{-- UNIVERSITAS --}}
                     <td class="px-6 py-4 text-sm text-gray-600">
-                        {{ $app->university }}
+                        {{ $app->student->university }}
                     </td>
 
                     {{-- DIVISI --}}
                     <td class="px-6 py-4 text-sm text-gray-600">
-{{--                        {{ $app->divisi_tujuan }}--}}
-                        Aplikasi Informatika
+                        {{ $app->division->name ?? '-' }}
                     </td>
 
                     {{-- TANGGAL PENGAJUAN --}}
-                    <td class="px-6 py-4 text-sm text-gray-600">
+                    <td class="px-6 py-4 text-sm text-gray-600 whitespace-nowrap">
                         {{ \Carbon\Carbon::parse($app->created_at)->format('d M Y') }}
                     </td>
 
-                    {{-- STATUS Pengajuan BADGE --}}
-                    <td class="px-6 py-4">
-
+                    {{-- STATUS PENGAJUAN --}}
+                    <td class="px-6 py-4 text-center">
                         @if($app->application_status === 'approved')
                             <span class="inline-flex items-center px-3 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">
                             <svg class="mr-2 -ml-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
@@ -134,11 +116,10 @@
                             Menunggu
                         </span>
                         @endif
-
                     </td>
 
-                    {{-- STATUS Surat BADGE --}}
-                    <td class="px-6 py-4">
+                    {{-- STATUS SURAT --}}
+                    <td class="px-6 py-4 text-center">
                         @if($app->letter_status === 'completed')
                             <span class="inline-flex items-center px-3 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">
                             <svg class="mr-2 -ml-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
@@ -157,14 +138,11 @@
                         @endif
                     </td>
 
-                    {{-- AKSI BUTTONS --}}
+                    {{-- AKSI --}}
                     <td class="px-6 py-4 text-sm flex items-center gap-3">
 
                         {{-- DETAIL --}}
-                        <a href="{{ route("admin.pengajuan.show", $app->id) }}"
-                           class="p-2 rounded-xl bg-gray-50 border border-gray-200
-          hover:bg-gray-100 hover:border-gray-300 transition-all duration-150"
-                           title="Lihat Detail">
+                        <a href="{{ route("admin.pengajuan.show", $app->id) }}" class="p-2 rounded-xl bg-gray-50 border border-gray-200 hover:bg-gray-100 hover:border-gray-300 transition-all duration-150" title="Lihat Detail">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                  viewBox="0 0 24 24" stroke-width="1.7"
                                  stroke="currentColor" class="w-5 h-5 text-gray-700">
@@ -178,6 +156,7 @@
                     </td>
                 </tr>
 
+                {{-- Pesan Data Kosong untuk Filter --}}
                 <tr id="noDataMessage" class="hidden">
                     <td colspan="100%" class="py-10">
                         <div class="flex flex-col items-center justify-center text-gray-500">
@@ -189,7 +168,16 @@
                 </tr>
 
             @empty
-
+                {{-- Pesan Data Kosong Database --}}
+                <tr>
+                    <td colspan="100%" class="py-12 text-center">
+                        <div class="flex flex-col items-center justify-center text-gray-500">
+                            <svg class="h-12 w-12 text-gray-300 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                            <p class="text-lg font-medium">Belum ada pengajuan magang.</p>
+                            <p class="text-sm text-gray-400">Saat ini belum ada mahasiswa yang mengajukan magang.</p>
+                        </div>
+                    </td>
+                </tr>
             @endforelse
 
             </tbody>
