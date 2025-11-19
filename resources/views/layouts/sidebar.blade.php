@@ -53,7 +53,7 @@
             <span>Data Mahasiswa</span>
         </a>
 
-        <a href="#"
+        <a href="{{ route("admin.pembimbing.index") }}"
            class="flex items-center space-x-3 py-3 px-4 rounded-lg transition
            {{ request()->is('admin/pembimbing*') ? 'bg-[#1B2A52] text-white' : 'hover:bg-[#1B2A52] hover:text-white' }}">
             <svg class="w-6 h-6 text-white-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -72,7 +72,7 @@
             </svg>
 
 
-            <span>Data Disvisi</span>
+            <span>Data Divisi</span>
         </a>
 
         <a href="{{ route("admin.user.index") }}"

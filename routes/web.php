@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DivisionController;
+use App\Http\Controllers\admin\MentorController;
 use App\Http\Controllers\admin\UserController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -48,8 +49,12 @@ Route::middleware(['auth', 'role:admin'])
     Route::post('/pengajuan/{registration}/reject', [RegistarVerification::class, 'reject'])->name('pengajuan.reject');
     Route::delete('/pengajuan/{registration}/archive', [RegistarVerification::class, 'archive'])->name('pengajuan.archive');
 
-    Route::resource('divisi', DivisionController::class)->parameters(['divisi' => 'division'])->except(['show', 'create', 'edit']);
-    Route::resource('user', UserController::class)->except(['show', 'create', 'edit']);
+    Route::resource('divisi', DivisionController::class)->parameters(['divisi' => 'division'])
+        ->except(['show', 'create', 'edit']);
+    Route::resource('user', UserController::class)
+        ->except(['show', 'create', 'edit']);
+    Route::resource('pembimbing', MentorController::class)->parameters(['pembimbing' => 'mentor'])
+        ->except(['show', 'create', 'edit']);
 
 
 });
