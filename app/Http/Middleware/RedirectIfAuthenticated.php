@@ -18,7 +18,23 @@ class RedirectIfAuthenticated
     {
         if (auth()->check()) {
 
-            return redirect()->back();
+            if (auth()->user()->hasRole('admin')) {
+                return redirect('/admin/dashboard');
+            }
+
+            if (auth()->user()->hasRole('kepala_divisi')) {
+                return redirect('/kadiv/dashboard');
+            }
+
+            if (auth()->user()->hasRole('mahasiswa')) {
+                return redirect('/mahasiswa/dashboard');
+            }
+
+            if (auth()->user()->hasRole('pembimbing')) {
+                return redirect('/pembimbing/dashboard');
+            }
+
+            return redirect('/dashboard');
         }
 
         return $next($request);

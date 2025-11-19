@@ -56,9 +56,9 @@
             <tbody class="bg-white divide-y divide-gray-200">
             @forelse ($applications as $i => $app)
                 <tr class="hover:bg-gray-50 transition group"
-                    data-full_name="{{ strtolower($app->full_name) }}"
-                    data-study_program="{{ strtolower($app->study_program) }}"
-                    data-university="{{ strtolower($app->university) }}"
+                    data-full_name="{{ strtolower($app->student->name) }}"
+                    data-study_program="{{ strtolower($app->student->study_program) }}"
+                    data-university="{{ strtolower($app->student->university) }}"
                     data-created_at="{{ \Carbon\Carbon::parse($app->created_at)->format('Y-m-d') }}"
                     data-mentor_name="{{ strtolower($app->mentor->name ?? '-') }}"
                     {{-- Mapping status untuk filter text --}}
@@ -74,12 +74,12 @@
 
                     {{-- MAHASISWA --}}
                     <td class="px-6 py-4">
-                        <div class="text-sm font-medium text-gray-900">{{ $app->full_name }}</div>
-                        <div class="text-xs text-gray-500">{{ $app->study_program }}</div>
+                        <div class="text-sm font-medium text-gray-900">{{ $app->student->name }}</div>
+                        <div class="text-xs text-gray-500">{{ $app->student->study_program }}</div>
                     </td>
 
                     {{-- KAMPUS --}}
-                    <td class="px-6 py-4 text-sm text-gray-600">{{ $app->university }}</td>
+                    <td class="px-6 py-4 text-sm text-gray-600">{{ $app->student->university }}</td>
 
                     {{-- TANGGAL --}}
                     <td class="px-6 py-4 text-sm text-gray-600">

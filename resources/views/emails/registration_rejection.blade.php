@@ -6,7 +6,7 @@
 </head>
 <body style="font-family: Arial, sans-serif; line-height: 1.6;">
 
-<p>Yth. {{ $registration->full_name }},</p>
+<p>Yth. {{ $student->name }},</p>
 
 <p>Terima kasih atas pengajuan magang Anda (ID: {{ $registration->id }}).</p>
 

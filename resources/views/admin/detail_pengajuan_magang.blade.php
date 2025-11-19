@@ -30,19 +30,19 @@
                 <dl class="divide-y divide-gray-200">
                     <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                         <dt class="text-sm font-medium text-gray-500">Nama</dt>
-                        <dd class="mt-1 text-base font-medium text-gray-900 sm:mt-0 sm:col-span-2">{{ $application->full_name ?? '-' }}</dd>
+                        <dd class="mt-1 text-base font-medium text-gray-900 sm:mt-0 sm:col-span-2">{{ $application->student->name ?? '-' }}</dd>
                     </div>
                     <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                         <dt class="text-sm font-medium text-gray-500">NIM</dt>
-                        <dd class="mt-1 text-base font-medium text-gray-900 sm:mt-0 sm:col-span-2">{{ $application->nim ?? '-' }}</dd>
+                        <dd class="mt-1 text-base font-medium text-gray-900 sm:mt-0 sm:col-span-2">{{ $application->student->nim ?? '-' }}</dd>
                     </div>
                     <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                         <dt class="text-sm font-medium text-gray-500">Universitas</dt>
-                        <dd class="mt-1 text-base font-medium text-gray-900 sm:mt-0 sm:col-span-2">{{ $application->university ?? '-' }}</dd>
+                        <dd class="mt-1 text-base font-medium text-gray-900 sm:mt-0 sm:col-span-2">{{ $application->student->university ?? '-' }}</dd>
                     </div>
                     <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                         <dt class="text-sm font-medium text-gray-500">Program Studi</dt>
-                        <dd class="mt-1 text-base font-medium text-gray-900 sm:mt-0 sm:col-span-2">{{ $application->study_program ?? '-' }}</dd>
+                        <dd class="mt-1 text-base font-medium text-gray-900 sm:mt-0 sm:col-span-2">{{ $application->student->study_program ?? '-' }}</dd>
                     </div>
                 </dl>
             </div>

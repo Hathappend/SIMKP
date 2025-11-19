@@ -12,39 +12,38 @@ use Illuminate\View\View;
 
 class RegistarVerification extends Controller
 {
-    public function create():View
+    public function create(): View
     {
-        $applications =  Registration::orderBy('created_at', 'desc')->get();
+        $applications = Registration::with(['student', 'division'])
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         return view('admin.pengajuan_magang', compact('applications'));
     }
 
     public function show($id): View
     {
-        $application = Registration::find($id);
+        $application = Registration::with(['student', 'division'])->findOrFail($id);
 
         return view('admin.detail_pengajuan_magang', compact('application'));
     }
 
     public function forward(Registration $registration): RedirectResponse
     {
-        if ($registration->application_status === 'pending') {
-
-            $registration->application_status = 'waiting';
-
-            $registration->save();
-
-            // 4. (Opsional) Kirim notifikasi ke Kepala Divisi
-            // ... logika notifikasi Anda di sini ...
-
-        } else {
-
-            return redirect()->back()->with('error', 'Tindakan tidak dapat dilakukan.');
+        if ($registration->application_status !== 'pending') {
+            return redirect()->back()->with('error', 'Tindakan tidak dapat dilakukan. Status pengajuan bukan Pending.');
         }
+
+        $registration->update([
+            'application_status' => 'waiting'
+        ]);
 
         return redirect()->back()->with('success', 'Pengajuan telah disetujui dan diteruskan ke Kepala Divisi.');
     }
 
+    /**
+     * Menolak pengajuan (Admin).
+     */
     public function reject(Request $request, Registration $registration): RedirectResponse
     {
         $request->validate([
@@ -55,20 +54,23 @@ class RegistarVerification extends Controller
             return redirect()->back()->with('error', 'Tindakan tidak dapat dilakukan.');
         }
 
-        // 1. Update status ke 'rejected'
-        $registration->application_status = 'rejected';
-        $registration->rejection_note = $request->input('rejection_note');
-        $registration->save();
+        $registration->update([
+            'application_status' => 'rejected',
+            'rejection_note' => $request->input('rejection_note')
+        ]);
 
-        // 2. Kirim email 'Ditolak' ke mahasiswa
         try {
-            Mail::to($registration->email)->send(new RejectionMail($registration));
+
+            $studentEmail = $registration->student->email;
+
+            Mail::to($studentEmail)->send(new RejectionMail($registration));
+
         } catch (\Exception $e) {
-            // Jika email gagal, kembalikan dengan pesan error
-            return redirect()->back()->with('error', 'Gagal mengirim email. Error: ' . $e->getMessage());
+            // Jika email gagal, kembalikan dengan pesan error tapi data sudah tersimpan
+            return redirect()->back()->with('warning', 'Pengajuan ditolak, tetapi gagal mengirim email notifikasi. Error: ' . $e->getMessage());
         }
 
-        return redirect()->back()->with('success', 'Pengajuan telah ditolak.');
+        return redirect()->back()->with('success', 'Pengajuan telah ditolak dan notifikasi dikirim.');
     }
 
     public function archive(Registration $registration): RedirectResponse
