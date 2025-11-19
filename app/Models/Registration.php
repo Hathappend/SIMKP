@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Registration extends Model
@@ -19,7 +20,10 @@ class Registration extends Model
         'kesbangpol_letter',
         'application_status',
         'letter_status',
-        'rejection_note'
+        'rejection_note',
+        'letter_number',
+        'letter_date',
+        'reply_letter_path'
     ];
 
     public function mentor(): BelongsTo
@@ -35,5 +39,10 @@ class Registration extends Model
     public function student(): BelongsTo
     {
         return $this->belongsTo(Student::class);
+    }
+
+    public function members(): HasMany
+    {
+        return $this->hasMany(RegistrationMember::class);
     }
 }
