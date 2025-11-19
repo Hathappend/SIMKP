@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DivisionController;
+use App\Http\Controllers\Admin\LetterController;
 use App\Http\Controllers\admin\MentorController;
 use App\Http\Controllers\admin\UserController;
 use App\Http\Controllers\ProfileController;
@@ -67,6 +68,13 @@ Route::middleware(['auth', 'role:admin'])
             ->except(['show', 'create', 'edit']);
         Route::resource('pembimbing', MentorController::class)->parameters(['pembimbing' => 'mentor'])
             ->except(['show', 'create', 'edit']);
+
+        Route::get('/surat', [LetterController::class, 'index'])
+            ->name('surat.index');
+        Route::put('/surat/{registration}', [LetterController::class, 'update'])
+            ->name('surat.update');
+        Route::get('/surat/{registration}/show', [LetterController::class, 'show'])
+            ->name('surat.show');
 
 });
 
