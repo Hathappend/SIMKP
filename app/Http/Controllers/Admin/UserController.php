@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\NewUserWelcome;
 use App\Mail\UserProfileUpdated;
 use App\Models\Division;
+use App\Models\Mentor;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -25,7 +26,7 @@ class UserController extends Controller
         $divisions = Division::orderBy('name')->get();
         $roles = Role::all();
 
-        return view('admin.user.create', compact('users', 'divisions', 'roles')); // <-- 3. Kirim $roles
+        return view('admin.user.create', compact('users', 'divisions', 'roles'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -34,7 +35,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email',
             'password' => ['required', 'confirmed', Password::min(8)],
-            'role_name' => 'required|string|exists:roles,name', // <-- 4. Validasi nama role
+            'role_name' => 'required|string|exists:roles,name', // <-- Validasi nama role
             'division_id' => 'nullable|required_if:role_name,kepala_divisi|exists:divisions,id',
         ], [
             'division_id.required_if' => 'Divisi wajib diisi jika perannya adalah Kepala Divisi.',
@@ -57,6 +58,16 @@ class UserController extends Controller
 
         $user = User::create($data);
         $user->assignRole($request->role_name);
+
+        if ($request->filled('mentor_id')) {
+            $mentor = Mentor::find($request->mentor_id);
+            if ($mentor) {
+                $mentor->update([
+                    'user_id' => $user->id,
+                    'email' => $user->email
+                ]);
+            }
+        }
 
         try {
             Mail::to($user->email)->send(new NewUserWelcome($user, $temporaryPassword));
@@ -101,6 +112,13 @@ class UserController extends Controller
 
         $user->update($data);
         $user->syncRoles([$request->role_name]);
+
+        if ($user->mentor) {
+            $user->mentor->update([
+                'email' => $user->email,
+                'name'  => $user->name
+            ]);
+        }
 
         try {
             Mail::to($user->email)->send(new UserProfileUpdated($user));
