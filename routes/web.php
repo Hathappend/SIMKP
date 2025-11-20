@@ -6,6 +6,7 @@ use App\Http\Controllers\admin\MentorController;
 use App\Http\Controllers\admin\UserController;
 use App\Http\Controllers\Mahasiswa\AttendanceController;
 use App\Http\Controllers\Mahasiswa\LogbookController;
+use App\Http\Controllers\Mahasiswa\ReportController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegistrationController;
@@ -47,6 +48,11 @@ Route::middleware(['auth', 'role:mahasiswa'])
             ->name('attendance.store');
 
         Route::resource('logbook', LogbookController::class);
+
+        Route::get('/laporan', [ReportController::class, 'index'])
+            ->name('laporan.index');
+        Route::post('/laporan}', [ReportController::class, 'update'])
+            ->name('laporan.update');
 
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

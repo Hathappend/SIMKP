@@ -173,6 +173,16 @@
             </svg>
             <span>Logbook</span>
         </a>
+
+        <a href="{{ route("mahasiswa.laporan.index") }}"
+           class="flex items-center space-x-3 py-3 px-4 rounded-lg transition
+           {{ request()->is('mahasiswa/laporan*') ? 'bg-[#1B2A52] text-white' : 'hover:bg-[#1B2A52] hover:text-white' }}">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                      d="M3 7h5l2 2h11v9H3z" />
+            </svg>
+            <span>Laporan</span>
+        </a>
         @endrole
 
     </nav>
