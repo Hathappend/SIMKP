@@ -31,7 +31,7 @@
             {{-- STATS GRID --}}
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
 
-                {{-- CARD 1: INFORMASI PENEMPATAN --}}
+                {{-- INFORMASI PENEMPATAN --}}
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 relative overflow-hidden">
                     <div class="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-full blur-3xl opacity-60 -mr-10 -mt-10"></div>
 
@@ -73,7 +73,7 @@
                     </div>
                 </div>
 
-                {{-- CARD 2: PERFORMA KEHADIRAN (REAL DATA) --}}
+                {{-- PERFORMA KEHADIRAN --}}
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col justify-between">
                     <div>
                         <h3 class="text-base font-semibold text-gray-800 mb-6">Performa Kehadiran</h3>
@@ -118,7 +118,7 @@
                     </div>
                 </div>
 
-                {{-- CARD 3: STATUS LAPORAN AKHIR (SINGLE STATUS) --}}
+                {{-- STATUS LAPORAN AKHIR --}}
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 h-full flex flex-col">
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="text-base font-semibold text-gray-800">Laporan Akhir</h3>
@@ -168,7 +168,7 @@
             </div>
 
 
-            {{-- 3. LOGBOOK SECTION (REAL DATA) --}}
+            {{-- LOGBOOK SECTION --}}
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                     <div>
@@ -188,7 +188,6 @@
                 </div>
 
                 <div class="space-y-3">
-                    {{-- LOOPING DATA LOGBOOK --}}
                     @forelse($todayLogbooks as $log)
                         <div class="group flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-xl bg-gray-50 border border-gray-100 hover:border-indigo-200 hover:bg-indigo-50/30 transition-all">
                             <div class="flex items-start gap-4 w-full">
@@ -219,7 +218,7 @@
                                 @endphp
                                 <div class="text-xs text-gray-400 hidden sm:block whitespace-nowrap">{{ $diff }}</div>
 
-                                {{-- Status Badge (Pakai Accessor yang sudah dibuat) --}}
+                                {{-- Status Badge --}}
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border
                                 bg-{{ $log->status_color }}-100 text-{{ $log->status_color }}-800 border-{{ $log->status_color }}-200">
                                 {{ $log->status_label }}

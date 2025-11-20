@@ -2,7 +2,6 @@
 
 @section('content')
     <div class="min-h-screen bg-gray-100/50">
-        {{-- Perbaikan 1: Padding container utama disesuaikan untuk mobile --}}
         <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
 
             {{-- HEADER --}}
@@ -15,7 +14,6 @@
 
             {{-- ALERT SUKSES --}}
             @if (session('success'))
-                {{-- Perbaikan 2: Layout alert lebih fleksibel di mobile --}}
                 <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-xl mb-6 flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
                     <div class="flex-shrink-0 mt-0.5 sm:mt-0">
                         <svg class="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
@@ -27,12 +25,10 @@
             {{-- MAIN CARD --}}
             <div class="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
 
-                {{-- 1. STATUS BANNER --}}
-                {{-- Perbaikan 3: Padding dan layout status bar disesuaikan --}}
+                {{-- STATUS BANNER --}}
                 <div class="p-4 sm:p-6 border-b border-gray-100 bg-gray-50/50">
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-y-3 sm:gap-y-0">
 
-                        {{-- Status Kiri --}}
                         <div class="w-full sm:w-auto">
                             <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5">Status Laporan</p>
 
@@ -64,7 +60,7 @@
                             </div>
                         </div>
 
-                        {{-- Tanggal Update (Kanan) - Disembunyikan di layar sangat kecil --}}
+                        {{-- Tanggal Update --}}
                         @if($registration->report_file)
                             <div class="hidden sm:block text-right mt-2 sm:mt-0">
                                 <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Terakhir Diupdate</p>
@@ -74,7 +70,7 @@
                     </div>
                 </div>
 
-                {{-- 2. ALERT REVISI --}}
+                {{-- ALERT --}}
                 @if($registration->report_status == 'revision')
                     <div class="bg-red-50 border-l-4 border-red-500 p-4 sm:p-6">
                         <div class="flex items-start">
@@ -98,7 +94,7 @@
                 {{-- Konten Body --}}
                 <div class="p-5 sm:p-8">
 
-                    {{-- 3. FORM UPLOAD --}}
+                    {{-- FORM UPLOAD --}}
                     @if($registration->report_status != 'approved')
 
                         {{-- Info Keamanan Data --}}
@@ -127,15 +123,10 @@
                             <div class="mb-6">
                                 <label class="block text-sm font-bold text-gray-700 mb-2">File Laporan (PDF)</label>
 
-                                {{--
-                                    Perbaikan 4: Area Dropzone
-                                    - Tinggi dikurangi di mobile (h-40)
-                                    - Ukuran ikon dan teks disesuaikan
-                                --}}
                                 <div class="relative w-full h-40 sm:h-48 rounded-xl border-2 border-dashed transition-all duration-200 group overflow-hidden flex items-center justify-center bg-gray-50"
                                      :class="fileName ? 'border-[#1B2A52] bg-blue-50/50' : 'border-gray-300 hover:bg-gray-100 hover:border-indigo-400'">
 
-                                    {{-- INPUT FILE (INVISIBLE LAYER) --}}
+                                    {{-- INPUT FILE --}}
                                     <input type="file" name="file" id="file-upload" accept=".pdf"
                                            class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                                            @change="
@@ -146,7 +137,7 @@
                                            }
                                        ">
 
-                                    {{-- TAMPILAN 1: BELUM ADA FILE --}}
+                                    {{-- BELUM ADA FILE --}}
                                     <div x-show="!fileName" class="text-center pointer-events-none p-4 sm:p-6 transition-opacity duration-300">
                                         <svg class="mx-auto h-10 w-10 sm:h-12 sm:w-12 text-gray-400 group-hover:text-indigo-500 transition-colors mb-2 sm:mb-3" stroke="currentColor" fill="none" viewBox="0 0 48 48">
                                             <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
@@ -158,7 +149,7 @@
                                         <p class="text-xs text-gray-500 mt-1">PDF Maksimal 10MB</p>
                                     </div>
 
-                                    {{-- TAMPILAN 2: FILE SUDAH DIPILIH --}}
+                                    {{-- FILE SUDAH DIPILIH --}}
                                     <div x-show="fileName" class="text-center pointer-events-none p-4 sm:p-6 transition-opacity duration-300 z-0" style="display: none;"
                                          x-transition:enter="transition ease-out duration-300"
                                          x-transition:enter-start="opacity-0 scale-95"
@@ -180,7 +171,7 @@
                                 @error('file') <p class="text-red-500 text-sm mt-2 font-medium">{{ $message }}</p> @enderror
                             </div>
 
-                            {{-- Perbaikan 5: Layout Checkbox --}}
+                            {{-- Layout Checkbox --}}
                             <div class="flex items-start mb-6 bg-gray-50 p-3 rounded-lg border border-gray-100">
                                 <div class="flex items-center h-5 mt-0.5">
                                     <input id="agreement" type="checkbox" x-model="agreement" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded cursor-pointer">
@@ -204,7 +195,7 @@
                         </form>
 
                     @else
-                        {{-- 4. TAMPILAN JIKA SUDAH APPROVED --}}
+                        {{-- SUDAH APPROVED --}}
                         <div class="text-center py-8 sm:py-12">
                             <div class="mx-auto flex items-center justify-center h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-green-100 mb-4">
                                 <svg class="h-8 w-8 sm:h-10 sm:w-10 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
@@ -217,9 +208,8 @@
                     @endif
                 </div>
 
-                {{-- 5. FILE PREVIEW (Selalu muncul jika ada file) --}}
+                {{-- FILE PREVIEW  --}}
                 @if($registration->report_file)
-                    {{-- Perbaikan 6: Layout Preview File --}}
                     <div class="bg-gray-50 px-5 py-4 sm:px-8 sm:py-6 border-t border-gray-200">
                         <h4 class="text-xs font-bold text-gray-500 mb-3 uppercase tracking-wide">File Terkirim</h4>
 
