@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\DivisionController;
 use App\Http\Controllers\Admin\LetterController;
 use App\Http\Controllers\admin\MentorController;
 use App\Http\Controllers\admin\UserController;
+use App\Http\Controllers\Mahasiswa\AttendanceController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegistrationController;
@@ -38,6 +39,11 @@ Route::middleware(['auth', 'role:mahasiswa'])
         // Download Surat Balasan (Fitur di Dashboard)
         Route::get('/surat-balasan/download', [MahasiswaDashboard::class, 'downloadLetter'])
             ->name('download-surat');
+
+        Route::get('/kehadiran', [AttendanceController::class, 'index'])
+            ->name('attendance.index');
+        Route::post('/kehadiran', [AttendanceController::class, 'store'])
+            ->name('attendance.store');
 
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
