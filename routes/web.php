@@ -7,7 +7,7 @@ use App\Http\Controllers\admin\UserController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegistrationController;
-use App\Http\Controllers\DashboardController as MahasiswaDashboard;
+use App\Http\Controllers\Mahasiswa\DashboardController as MahasiswaDashboard;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Pembimbing\DashboardController as PembimbingDashboard;
 use App\Http\Controllers\KepalaDivisi\DashboardController as KepalaDivisiDashboard;
@@ -27,12 +27,21 @@ Route::get('/', function () {
 Route::get('/registrasi', [RegistrationController::class, 'create'])->name('registration.create');
 Route::post('/registrasi', [RegistrationController::class, 'store'])->name('registration.store');
 
-Route::middleware(['auth', 'role:mahasiswa'])->group(function () {
-    Route::get('/dashboard', [MahasiswaDashboard::class, 'index'])->name('mahasiswa.dashboard');
+Route::middleware(['auth', 'role:mahasiswa'])
+    ->prefix('mahasiswa')
+    ->name('mahasiswa.')
+    ->group(function () {
 
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        Route::get('/dashboard', [MahasiswaDashboard::class, 'index'])
+            ->name('dashboard');
+
+        // Download Surat Balasan (Fitur di Dashboard)
+        Route::get('/surat-balasan/download', [MahasiswaDashboard::class, 'downloadLetter'])
+            ->name('download-surat');
+
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 Route::middleware(['auth', 'role:pembimbing'])
