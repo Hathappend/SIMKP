@@ -23,7 +23,10 @@ class Registration extends Model
         'rejection_note',
         'letter_number',
         'letter_date',
-        'reply_letter_path'
+        'reply_letter_path',
+        'report_file',
+        'report_status',
+        'report_feedback',
     ];
 
     public function mentor(): BelongsTo

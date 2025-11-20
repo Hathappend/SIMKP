@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="min-h-screen">
+    <div class="min-h-screen bg-gray-50/50">
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
@@ -16,7 +16,7 @@
                     </p>
                 </div>
 
-                {{-- Tombol Download --}}
+                {{-- Tombol Download Surat --}}
                 @if($registration->reply_letter_path)
                     <a href="{{ route('mahasiswa.download-surat') }}" target="_blank"
                        class="group inline-flex items-center px-4 py-2.5 bg-white border border-gray-200 rounded-xl shadow-sm text-sm font-medium text-gray-700 hover:border-red-200 hover:bg-red-50 hover:text-red-700 transition-all duration-200">
@@ -73,110 +73,102 @@
                     </div>
                 </div>
 
-                {{-- CARD 2: PROGRESS KEHADIRAN --}}
+                {{-- CARD 2: PERFORMA KEHADIRAN (REAL DATA) --}}
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col justify-between">
                     <div>
-                        <h3 class="text-base font-semibold text-gray-800 mb-6">Progres Kehadiran</h3>
+                        <h3 class="text-base font-semibold text-gray-800 mb-6">Performa Kehadiran</h3>
 
                         <div class="flex items-end justify-between mb-2">
                             <div class="flex items-baseline gap-1">
-                                <span class="text-5xl font-bold text-[#1B2A52]">{{ $daysPassed }}</span>
+                                {{-- Total Hadir Real --}}
+                                <span class="text-5xl font-bold text-[#1B2A52]">{{ $totalAttendance }}</span>
                                 <span class="text-gray-500 font-medium">Hari</span>
                             </div>
+                            {{-- Target Hari Kerja s/d Hari Ini --}}
                             <span class="text-sm text-gray-400 mb-1.5">
-                            Target: {{ $registration->start_date ? \Carbon\Carbon::parse($registration->start_date)->diffInDays($registration->end_date) + 1 : 0 }} Hari
+                            Target: {{ $workingDaysPassed }} Hari Kerja
                         </span>
                         </div>
 
-                        {{-- Progress Bar yang lebih tebal --}}
+                        {{-- Progress Bar Dinamis --}}
                         <div class="w-full bg-gray-100 rounded-full h-4 mb-4 overflow-hidden">
-                            <div class="bg-[#1B2A52] h-full rounded-full transition-all duration-1000 ease-out relative"
-                                 style="width: {{ $progressPercentage }}%">
-                                {{-- Efek Shine --}}
+                            @php
+                                $barColor = 'bg-red-500';
+                                if($attendancePercentage >= 80) $barColor = 'bg-[#1B2A52]';
+                                elseif($attendancePercentage >= 50) $barColor = 'bg-yellow-500';
+                            @endphp
+
+                            <div class="{{ $barColor }} h-full rounded-full transition-all duration-1000 ease-out relative"
+                                 style="width: {{ $attendancePercentage }}%">
                                 <div class="absolute inset-0 bg-white/20 w-full h-full animate-pulse"></div>
                             </div>
                         </div>
                     </div>
 
                     <div class="flex justify-between items-center text-sm border-t border-gray-50 pt-4 mt-2">
-                        <span class="font-medium text-[#1B2A52]">{{ $progressPercentage }}% Selesai</span>
-                        {{-- FIX: Gunakan round() untuk menghilangkan koma --}}
-                        <span class="text-gray-500">{{ round($daysRemaining) }} Hari Tersisa</span>
+                        <div class="flex flex-col">
+                            <span class="font-bold text-gray-700">{{ $attendancePercentage }}%</span>
+                            <span class="text-xs text-gray-400">Tingkat Kehadiran</span>
+                        </div>
+
+                        <div class="text-right flex flex-col">
+                            <span class="font-medium text-gray-700">{{ round($daysRemaining) }} Hari</span>
+                            <span class="text-xs text-gray-400">Sisa Masa Magang</span>
+                        </div>
                     </div>
                 </div>
 
-                {{-- CARD 3: TIMELINE LAPORAN --}}
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 h-full">
+                {{-- CARD 3: STATUS LAPORAN AKHIR (SINGLE STATUS) --}}
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 h-full flex flex-col">
                     <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-base font-semibold text-gray-800">Progres Laporan</h3>
-                        <a href="" class="text-xs font-medium text-indigo-600 hover:text-indigo-800 hover:underline">
-                            Lihat Detail
+                        <h3 class="text-base font-semibold text-gray-800">Laporan Akhir</h3>
+                        <a href="{{ route('mahasiswa.laporan.index') }}" class="text-xs font-medium text-indigo-600 hover:text-indigo-800 hover:underline">
+                            Detail
                         </a>
                     </div>
 
-                    <div class="relative border-l-2 border-gray-100 ml-3 space-y-0">
-
-                        @foreach($reportStages as $stage)
-                            <div class="relative pl-6 pb-6 last:pb-0">
-
-                                @if($stage->status == 'approved')
-                                    {{-- STATUS: SELESAI --}}
-                                    <div class="absolute -left-[9px] top-0 w-5 h-5 rounded-full bg-green-100 border-2 border-green-500 flex items-center justify-center z-10">
-                                        <svg class="w-3 h-3 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
-                                    </div>
-                                    <div class="flex flex-col">
-                                        <h4 class="text-sm font-bold text-gray-800">{{ $stage->stage_label }}</h4>
-                                        <span class="text-[10px] font-semibold text-green-600 bg-green-50 w-max px-1.5 py-0.5 rounded mt-1">Disetujui</span>
-                                    </div>
-
-                                @elseif($stage->status == 'revision')
-                                    {{-- STATUS: REVISI --}}
-                                    <div class="absolute -left-[9px] top-0 w-5 h-5 rounded-full bg-orange-100 border-2 border-orange-500 ring-4 ring-orange-50 flex items-center justify-center z-10">
-                                        <span class="text-orange-600 text-xs font-bold">!</span>
-                                    </div>
-                                    <div class="flex flex-col">
-                                        <h4 class="text-sm font-bold text-gray-800">{{ $stage->stage_label }}</h4>
-                                        <span class="text-[10px] font-semibold text-orange-600 bg-orange-50 w-max px-1.5 py-0.5 rounded mt-1">Perlu Revisi</span>
-                                        {{-- Tampilkan Feedback Singkat (Opsional) --}}
-                                        @if($stage->feedback)
-                                            <p class="text-[10px] text-gray-500 mt-1 italic line-clamp-2">"{{ $stage->feedback }}"</p>
-                                        @endif
-                                    </div>
-
-                                @elseif($stage->status == 'submitted')
-                                    {{-- STATUS: MENUNGGU REVIEW --}}
-                                    <div class="absolute -left-[9px] top-0 w-5 h-5 rounded-full bg-blue-100 border-2 border-blue-500 ring-4 ring-blue-50 flex items-center justify-center z-10">
-                                        <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-                                    </div>
-                                    <div class="flex flex-col">
-                                        <h4 class="text-sm font-bold text-gray-800">{{ $stage->stage_label }}</h4>
-                                        <span class="text-[10px] font-semibold text-blue-600 bg-blue-50 w-max px-1.5 py-0.5 rounded mt-1">Menunggu Review</span>
-                                    </div>
-
-                                @elseif($stage->status == 'ongoing')
-                                    {{-- STATUS: AKTIF (SILAKAN UPLOAD) --}}
-                                    <div class="absolute -left-[9px] top-0 w-5 h-5 rounded-full bg-white border-2 border-indigo-500 ring-4 ring-indigo-50 z-10"></div>
-                                    <div class="flex flex-col">
-                                        <h4 class="text-sm font-bold text-gray-900">{{ $stage->stage_label }}</h4>
-                                        <a href="" class="text-[10px] text-indigo-600 hover:underline mt-1">Upload Dokumen &rarr;</a>
-                                    </div>
-
-                                @else
-                                    {{-- STATUS: LOCKED --}}
-                                    <div class="absolute -left-[7px] top-1 w-3.5 h-3.5 rounded-full bg-gray-200 border-2 border-white z-10"></div>
-                                    <div class="flex flex-col opacity-50">
-                                        <h4 class="text-sm font-medium text-gray-500">{{ $stage->stage_label }}</h4>
-                                    </div>
-                                @endif
-
+                    <div class="flex-1 flex flex-col justify-center items-center text-center">
+                        @if(!$registration->report_status)
+                            {{-- Belum Upload --}}
+                            <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-3">
+                                <svg class="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>
                             </div>
-                        @endforeach
+                            <h4 class="font-bold text-gray-800">Belum Diupload</h4>
+                            <p class="text-xs text-gray-500 mt-1 px-4">Segera upload laporan akhir Anda untuk divalidasi.</p>
+                            <a href="{{ route('mahasiswa.laporan.index') }}" class="mt-4 px-4 py-2 bg-gray-900 text-white text-xs font-medium rounded-lg hover:bg-gray-800">Upload Sekarang</a>
 
+                        @elseif($registration->report_status == 'submitted')
+                            {{-- Menunggu Review --}}
+                            <div class="w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center mb-3 relative">
+                                <div class="absolute inset-0 rounded-full border-2 border-blue-200 animate-ping opacity-75"></div>
+                                <svg class="w-8 h-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            </div>
+                            <h4 class="font-bold text-blue-700">Menunggu Review</h4>
+                            <p class="text-xs text-blue-600/80 mt-1 px-4">Laporan sedang diperiksa oleh Pembimbing Lapangan.</p>
+
+                        @elseif($registration->report_status == 'revision')
+                            {{-- Revisi --}}
+                            <div class="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center mb-3">
+                                <svg class="w-8 h-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                            </div>
+                            <h4 class="font-bold text-red-700">Perlu Revisi</h4>
+                            <p class="text-xs text-red-600/80 mt-1 px-4">Ada catatan perbaikan dari pembimbing. Cek detail.</p>
+                            <a href="{{ route('mahasiswa.laporan.index') }}" class="mt-4 px-4 py-2 bg-red-600 text-white text-xs font-medium rounded-lg hover:bg-red-700">Lihat Revisi</a>
+
+                        @elseif($registration->report_status == 'approved')
+                            {{-- Approved --}}
+                            <div class="w-16 h-16 rounded-full bg-green-50 flex items-center justify-center mb-3">
+                                <svg class="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            </div>
+                            <h4 class="font-bold text-green-700">Selesai & Disetujui</h4>
+                            <p class="text-xs text-green-600/80 mt-1 px-4">Laporan akhir Anda valid dan telah diterima.</p>
+                        @endif
                     </div>
                 </div>
             </div>
 
-            {{-- 3. LOGBOOK SECTION --}}
+
+            {{-- 3. LOGBOOK SECTION (REAL DATA) --}}
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                     <div>
@@ -189,39 +181,61 @@
                         </p>
                     </div>
 
-                    <a href="" class="inline-flex items-center px-4 py-2 bg-[#1B2A52] hover:bg-blue-900 text-white text-sm font-medium rounded-lg transition-all shadow-sm">
+                    <a href="{{ route('mahasiswa.logbook.index') }}" class="inline-flex items-center px-4 py-2 bg-[#1B2A52] hover:bg-blue-900 text-white text-sm font-medium rounded-lg transition-all shadow-sm">
                         <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
                         Isi Logbook
                     </a>
                 </div>
 
                 <div class="space-y-3">
-                    {{-- Item Logbook --}}
-                    <div class="group flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-xl bg-gray-50 border border-gray-100 hover:border-indigo-200 hover:bg-indigo-50/30 transition-all">
-                        <div class="flex items-start gap-4">
-                            <div class="bg-white text-gray-800 font-bold px-3 py-2 rounded-lg shadow-sm border border-gray-100 text-sm min-w-[80px] text-center">
-                                08:00
+                    {{-- LOOPING DATA LOGBOOK --}}
+                    @forelse($todayLogbooks as $log)
+                        <div class="group flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-xl bg-gray-50 border border-gray-100 hover:border-indigo-200 hover:bg-indigo-50/30 transition-all">
+                            <div class="flex items-start gap-4 w-full">
+                                {{-- Jam --}}
+                                <div class="bg-white text-gray-800 font-bold px-3 py-2 rounded-lg shadow-sm border border-gray-100 text-sm min-w-[80px] text-center">
+                                    {{ \Carbon\Carbon::parse($log->start_time)->format('H:i') }}
+                                </div>
+
+                                {{-- Detail Kegiatan --}}
+                                <div class="flex-1">
+                                    <h4 class="text-gray-900 font-semibold text-sm group-hover:text-indigo-700 transition-colors">
+                                        {{ $log->activity }}
+                                    </h4>
+                                    <p class="text-gray-500 text-xs mt-1 line-clamp-1">
+                                        {{ $log->description ?? 'Tidak ada deskripsi detail.' }}
+                                    </p>
+                                </div>
                             </div>
-                            <div>
-                                <h4 class="text-gray-900 font-semibold text-sm group-hover:text-indigo-700 transition-colors">Briefing Pagi dengan Mentor</h4>
-                                <p class="text-gray-500 text-xs mt-1 line-clamp-1">Diskusi mengenai task harian dan kendala kemarin.</p>
+
+                            <div class="mt-3 sm:mt-0 flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
+                                {{-- Durasi --}}
+                                @php
+                                    $start = \Carbon\Carbon::parse($log->start_time);
+                                    $end = \Carbon\Carbon::parse($log->end_time);
+                                    $diff = $start->diffInHours($end);
+                                    if ($diff == 0) $diff = $start->diffInMinutes($end) . 'm';
+                                    else $diff .= ' jam';
+                                @endphp
+                                <div class="text-xs text-gray-400 hidden sm:block whitespace-nowrap">{{ $diff }}</div>
+
+                                {{-- Status Badge (Pakai Accessor yang sudah dibuat) --}}
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border
+                                bg-{{ $log->status_color }}-100 text-{{ $log->status_color }}-800 border-{{ $log->status_color }}-200">
+                                {{ $log->status_label }}
+                            </span>
                             </div>
                         </div>
-
-                        <div class="mt-3 sm:mt-0 flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
-                            <div class="text-xs text-gray-400 hidden sm:block">1 jam</div>
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200">
-                            Disetujui
-                        </span>
+                    @empty
+                        {{-- EMPTY STATE --}}
+                        <div class="text-center py-8 border-2 border-dashed border-gray-200 rounded-xl bg-white">
+                            <div class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 mb-2">
+                                <svg class="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
+                            </div>
+                            <p class="text-gray-500 text-sm font-medium">Belum ada kegiatan yang dicatat hari ini.</p>
+                            <p class="text-xs text-gray-400 mt-1">Yuk, catat apa yang kamu kerjakan sekarang!</p>
                         </div>
-                    </div>
-
-                    {{-- Jika Kosong (Uncomment jika backend logbook sudah siap) --}}
-                    {{--
-                    <div class="text-center py-8 border-2 border-dashed border-gray-200 rounded-xl">
-                        <p class="text-gray-400 text-sm">Belum ada kegiatan yang dicatat hari ini.</p>
-                    </div>
-                    --}}
+                    @endforelse
                 </div>
             </div>
 
