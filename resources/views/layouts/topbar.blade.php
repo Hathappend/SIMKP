@@ -1,4 +1,4 @@
-<header class="bg-white py-4" @click.stop>
+<header class="py-4" @click.stop>
 
     <div
          class="relative" >
