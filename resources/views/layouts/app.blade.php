@@ -7,7 +7,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="bg-white">
+<body class="bg-gray-50/50">
 <x-toast />
 
 <!-- Root Alpine State -->
