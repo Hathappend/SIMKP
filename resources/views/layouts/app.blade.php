@@ -39,7 +39,7 @@
         @include('layouts.topbar')
 
         <!-- PAGE CONTENT -->
-        <main class="flex-1 overflow-x-hidden overflow-y-auto p-6">
+        <main class="flex-1 overflow-x-hidden overflow-y-auto p-6 ">
             @yield('content')
         </main>
     </div>
