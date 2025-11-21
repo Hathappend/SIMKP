@@ -127,7 +127,7 @@
             {{ request()->is('pembimbing/laporan*') ? 'bg-[#1B2A52] text-white' : 'hover:bg-[#1B2A52] hover:text-white' }}"
             title="Validasi laporan akhir mahasiswa">
 
-            {{-- Bagian Kiri: Icon & Teks --}}
+            {{-- Icon & Teks --}}
             <div class="flex items-center space-x-3">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
@@ -136,11 +136,31 @@
                 <span class="font-medium">Review Laporan</span>
             </div>
 
-            {{-- Bagian Kanan: Badge Notifikasi (Hanya muncul jika > 0) --}}
             @if(isset($pendingReportCount) && $pendingReportCount > 0)
                 <span class="flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[10px] font-bold text-white bg-red-500 rounded-full shadow-sm group-hover:bg-white group-hover:text-[#1B2A52] transition-colors">
-            {{ $pendingReportCount }}
-        </span>
+                    {{ $pendingReportCount }}
+                </span>
+            @endif
+        </a>
+
+        <a href="{{ route('pembimbing.penilaian.index') }}"
+           class="flex items-center justify-between py-3 px-4 rounded-lg transition group
+           {{ request()->is('mentor/penilaian*') ? 'bg-[#1B2A52] text-white' : 'hover:bg-[#1B2A52] hover:text-white' }}"
+           title="Input nilai akhir magang">
+
+            {{-- Icon & Teks --}}
+            <div class="flex items-center space-x-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                          d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+                </svg>
+                <span class="font-medium">Penilaian KP</span>
+            </div>
+
+            @if(isset($pendingGradingCount) && $pendingGradingCount > 0)
+                <span class="flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[10px] font-bold text-white bg-yellow-500 rounded-full shadow-sm group-hover:bg-white group-hover:text-[#1B2A52] transition-colors">
+                    {{ $pendingGradingCount }}
+                </span>
             @endif
         </a>
         @endrole

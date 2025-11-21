@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Mahasiswa;
 
 use App\Http\Controllers\Controller;
-use App\Models\ReportProgress;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,7 +11,7 @@ use Illuminate\View\View;
 
 class ReportController extends Controller
 {
-    public function index(): View
+    public function index(): View|RedirectResponse
     {
         $student = Auth::user()->student;
         $registration = $student->registrations()
