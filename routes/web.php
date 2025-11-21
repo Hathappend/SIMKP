@@ -6,8 +6,10 @@ use App\Http\Controllers\admin\MentorController;
 use App\Http\Controllers\admin\UserController;
 use App\Http\Controllers\Mahasiswa\AttendanceController;
 use App\Http\Controllers\Mahasiswa\LogbookController;
-use App\Http\Controllers\Mahasiswa\ReportController;
+use App\Http\Controllers\Mahasiswa\ReportController as MahasiswaReport;
+use App\Http\Controllers\Mentor\ReportController as MentorReport;
 use App\Http\Controllers\Mentor\StudentController;
+use App\Http\Controllers\Pembimbing\AssessmentController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegistrationController;
@@ -50,9 +52,9 @@ Route::middleware(['auth', 'role:mahasiswa'])
 
         Route::resource('logbook', LogbookController::class);
 
-        Route::get('/laporan', [ReportController::class, 'index'])
+        Route::get('/laporan', [MahasiswaReport::class, 'index'])
             ->name('laporan.index');
-        Route::post('/laporan}', [ReportController::class, 'update'])
+        Route::post('/laporan}', [MahasiswaReport::class, 'update'])
             ->name('laporan.update');
 
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -79,12 +81,23 @@ Route::middleware(['auth', 'role:pembimbing'])
         Route::put('/logbook/{logbook}/reject', [StudentController::class, 'rejectLogbook'])
             ->name('logbook.reject');
 
-        Route::get('/laporan', [App\Http\Controllers\Mentor\ReportController::class, 'index'])
+        Route::get('/laporan', [MentorReport::class, 'index'])
             ->name('laporan.index');
-        Route::get('/laporan/{registration}', [App\Http\Controllers\Mentor\ReportController::class, 'show'])
+        Route::get('/laporan/{registration}', [MentorReport::class, 'show'])
             ->name('laporan.show');
-        Route::put('/laporan/{registration}/approve', [App\Http\Controllers\Mentor\ReportController::class, 'approve'])->name('laporan.approve');
-        Route::put('/laporan/{registration}/revise', [App\Http\Controllers\Mentor\ReportController::class, 'revise'])->name('laporan.revise');
+        Route::put('/laporan/{registration}/approve', [MentorReport::class, 'approve'])
+            ->name('laporan.approve');
+        Route::put('/laporan/{registration}/revise', [MentorReport::class, 'revise'])
+            ->name('laporan.revise');
+
+        Route::get('/penilaian', [AssessmentController::class, 'index'])
+            ->name('penilaian.index');
+        Route::get('/penilaian/{registration}/create', [AssessmentController::class, 'create'])
+            ->name('penilaian.create');
+        Route::post('/penilaian/{registration}', [AssessmentController::class, 'store'])
+            ->name('penilaian.store');
+        Route::get('/penilaian/{registration}/detail', [AssessmentController::class, 'show'])
+            ->name('penilaian.show');
 });
 
 Route::middleware(['auth', 'role:admin'])

@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Registration;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -24,15 +25,27 @@ class AppServiceProvider extends ServiceProvider
     {
         View::composer('*', function ($view) {
             $pendingReportCount = 0;
+            $pendingGradingCount = 0;
 
-            // Cek jika user login dan dia adalah Pembimbing
             if (Auth::check() && Auth::user()->hasRole('pembimbing') && Auth::user()->mentor) {
-                $pendingReportCount = Registration::where('mentor_id', Auth::user()->mentor->id)
-                    ->where('report_status', 'submitted') // Status Menunggu Review
+                $mentorId = Auth::user()->mentor->id;
+
+                // Hitung Laporan Pending
+                $pendingReportCount = Registration::where('mentor_id', $mentorId)
+                    ->where('report_status', 'submitted')
+                    ->count();
+
+                // Hitung Penilaian Pending
+                $pendingGradingCount = Registration::where('mentor_id', $mentorId)
+                    ->whereIn('application_status', ['approved', 'completed'])
+                    ->whereDate('end_date', '<=', Carbon::now()->addDays(7))
+                    ->doesntHave('assessment')
                     ->count();
             }
 
+            // Kirim kedua variabel ke View
             $view->with('pendingReportCount', $pendingReportCount);
+            $view->with('pendingGradingCount', $pendingGradingCount);
         });
     }
 }
