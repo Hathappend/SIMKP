@@ -74,9 +74,17 @@ Route::middleware(['auth', 'role:pembimbing'])
         Route::get('/mahasiswa/{registration}', [StudentController::class, 'show'])
             ->name('mahasiswa.show');
 
-        Route::put('/logbook/{logbook}/approve', [StudentController::class, 'approveLogbook'])->name('logbook.approve');
-        Route::put('/logbook/{logbook}/reject', [StudentController::class, 'rejectLogbook'])->name('logbook.reject');
+        Route::put('/logbook/{logbook}/approve', [StudentController::class, 'approveLogbook'])
+            ->name('logbook.approve');
+        Route::put('/logbook/{logbook}/reject', [StudentController::class, 'rejectLogbook'])
+            ->name('logbook.reject');
 
+        Route::get('/laporan', [App\Http\Controllers\Mentor\ReportController::class, 'index'])
+            ->name('laporan.index');
+        Route::get('/laporan/{registration}', [App\Http\Controllers\Mentor\ReportController::class, 'show'])
+            ->name('laporan.show');
+        Route::put('/laporan/{registration}/approve', [App\Http\Controllers\Mentor\ReportController::class, 'approve'])->name('laporan.approve');
+        Route::put('/laporan/{registration}/revise', [App\Http\Controllers\Mentor\ReportController::class, 'revise'])->name('laporan.revise');
 });
 
 Route::middleware(['auth', 'role:admin'])
