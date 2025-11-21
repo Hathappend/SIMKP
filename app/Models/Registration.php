@@ -48,4 +48,18 @@ class Registration extends Model
     {
         return $this->hasMany(RegistrationMember::class);
     }
+
+    public function logbooks(): HasMany
+    {
+        // hasMany Logbook, TAPI kuncinya adalah 'student_id' di kedua tabel
+        return $this->hasMany(Logbook::class, 'student_id', 'student_id');
+    }
+
+    /**
+     * Relasi Absensi juga sama
+     */
+    public function attendances(): HasMany
+    {
+        return $this->hasMany(Attendance::class, 'student_id', 'student_id');
+    }
 }
