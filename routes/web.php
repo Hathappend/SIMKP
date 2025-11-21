@@ -7,6 +7,7 @@ use App\Http\Controllers\admin\UserController;
 use App\Http\Controllers\Mahasiswa\AttendanceController;
 use App\Http\Controllers\Mahasiswa\LogbookController;
 use App\Http\Controllers\Mahasiswa\ReportController;
+use App\Http\Controllers\Mentor\StudentController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegistrationController;
@@ -64,7 +65,17 @@ Route::middleware(['auth', 'role:pembimbing'])
     ->name('pembimbing.')
     ->group(function () {
 
-        Route::get('/dashboard', [PembimbingDashboard::class, 'index'])->name('dashboard');
+        Route::get('/dashboard', [PembimbingDashboard::class, 'index'])
+            ->name('dashboard');
+
+        Route::get('/mahasiswa', [StudentController::class, 'index'])
+            ->name('mahasiswa.index');
+
+        Route::get('/mahasiswa/{registration}', [StudentController::class, 'show'])
+            ->name('mahasiswa.show');
+
+        Route::put('/logbook/{logbook}/approve', [StudentController::class, 'approveLogbook'])->name('logbook.approve');
+        Route::put('/logbook/{logbook}/reject', [StudentController::class, 'rejectLogbook'])->name('logbook.reject');
 
 });
 
