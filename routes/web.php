@@ -76,7 +76,7 @@ Route::middleware(['auth', 'role:pembimbing'])
         Route::get('/dashboard', [PembimbingDashboard::class, 'index'])
             ->name('dashboard');
 
-        Route::get('/mahasiswa', [StudentController::class, 'index'])
+        Route::get('/mahasiswa', [MentorStudent::class, 'index'])
             ->name('mahasiswa.index');
 
         Route::get('/mahasiswa/{registration}', [MentorStudent::class, 'show'])
