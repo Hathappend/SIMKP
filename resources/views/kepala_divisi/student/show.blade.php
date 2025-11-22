@@ -181,6 +181,92 @@
                 </div>
             </div>
 
+            {{-- ================================================== --}}
+            {{-- [BARU] LAPORAN & HASIL AKHIR (MONITORING)          --}}
+            {{-- ================================================== --}}
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-6">
+                <div class="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                    <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wide">Laporan & Hasil Akhir</h3>
+                </div>
+
+                <div class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                        {{-- 1. DOKUMEN LAPORAN --}}
+                        <div>
+                            <h4 class="text-xs font-bold text-gray-400 uppercase mb-3 flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                                Dokumen Laporan
+                            </h4>
+
+                            @if($registration->report_file)
+                                <div class="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg hover:border-indigo-300 transition-colors group">
+                                    <div class="flex items-center gap-3 min-w-0">
+                                        <div class="p-2 bg-red-50 text-red-500 rounded-lg shrink-0">
+                                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd" /></svg>
+                                        </div>
+                                        <div class="min-w-0">
+                                            <p class="text-sm font-bold text-gray-900 truncate">Laporan_Akhir.pdf</p>
+                                            <p class="text-[10px] text-gray-500">
+                                                @if($registration->report_status == 'approved')
+                                                    <span class="text-green-600 font-bold">Disetujui</span>
+                                                @elseif($registration->report_status == 'revision')
+                                                    <span class="text-red-600 font-bold">Revisi</span>
+                                                @else
+                                                    <span class="text-blue-600 font-bold">Menunggu Review</span>
+                                                @endif
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <a href="{{ Storage::url($registration->report_file) }}" target="_blank" class="p-2 text-gray-400 hover:text-[#1B2A52] hover:bg-gray-100 rounded-lg transition-all" title="Download File">
+                                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4-4m0 0L8 8m4-4v12" /></svg>
+                                    </a>
+                                </div>
+                            @else
+                                <div class="p-4 border-2 border-dashed border-gray-200 rounded-lg text-center">
+                                    <p class="text-xs text-gray-400 italic">Mahasiswa belum mengupload laporan.</p>
+                                </div>
+                            @endif
+                        </div>
+
+                        {{-- 2. NILAI & SERTIFIKAT --}}
+                        <div>
+                            <h4 class="text-xs font-bold text-gray-400 uppercase mb-3 flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" /></svg>
+                                Penilaian Akhir
+                            </h4>
+
+                            @if($registration->assessment)
+                                <div class="flex items-center justify-between p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 bg-white rounded-md flex items-center justify-center text-lg font-bold text-yellow-700 shadow-sm border border-yellow-100">
+                                            {{ $registration->assessment->grade }}
+                                        </div>
+                                        <div>
+                                            <p class="text-[10px] font-bold text-yellow-600 uppercase">Nilai Akhir</p>
+                                            <p class="text-sm font-bold text-gray-800">{{ $registration->assessment->final_score }} / 100</p>
+                                        </div>
+                                    </div>
+
+                                    @if($registration->assessment->certificate_path)
+                                        <a href="{{ Storage::url($registration->assessment->certificate_path) }}" target="_blank" class="px-3 py-1.5 bg-white text-yellow-700 text-xs font-bold rounded border border-yellow-200 hover:bg-yellow-100 transition shadow-sm">
+                                            Lihat Sertifikat
+                                        </a>
+                                    @else
+                                        <span class="text-[10px] text-gray-400 italic px-2">Belum terbit</span>
+                                    @endif
+                                </div>
+                            @else
+                                <div class="p-4 border-2 border-dashed border-gray-200 rounded-lg text-center">
+                                    <p class="text-xs text-gray-400 italic">Pembimbing belum memberikan nilai.</p>
+                                </div>
+                            @endif
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 @endsection
