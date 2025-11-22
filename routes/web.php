@@ -8,7 +8,8 @@ use App\Http\Controllers\Mahasiswa\AttendanceController;
 use App\Http\Controllers\Mahasiswa\LogbookController;
 use App\Http\Controllers\Mahasiswa\ReportController as MahasiswaReport;
 use App\Http\Controllers\Mentor\ReportController as MentorReport;
-use App\Http\Controllers\Mentor\StudentController;
+use App\Http\Controllers\Mentor\StudentController as MentorStudent;
+use App\Http\Controllers\Admin\StudentController as AdminStudent;
 use App\Http\Controllers\Pembimbing\AssessmentController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -76,12 +77,12 @@ Route::middleware(['auth', 'role:pembimbing'])
         Route::get('/mahasiswa', [StudentController::class, 'index'])
             ->name('mahasiswa.index');
 
-        Route::get('/mahasiswa/{registration}', [StudentController::class, 'show'])
+        Route::get('/mahasiswa/{registration}', [MentorStudent::class, 'show'])
             ->name('mahasiswa.show');
 
-        Route::put('/logbook/{logbook}/approve', [StudentController::class, 'approveLogbook'])
+        Route::put('/logbook/{logbook}/approve', [MentorStudent::class, 'approveLogbook'])
             ->name('logbook.approve');
-        Route::put('/logbook/{logbook}/reject', [StudentController::class, 'rejectLogbook'])
+        Route::put('/logbook/{logbook}/reject', [MentorStudent::class, 'rejectLogbook'])
             ->name('logbook.reject');
 
         Route::get('/laporan', [MentorReport::class, 'index'])
@@ -121,12 +122,20 @@ Route::middleware(['auth', 'role:admin'])
         Route::delete('/pengajuan/{registration}/archive', [RegistarVerification::class, 'archive'])
             ->name('pengajuan.archive');
 
-        Route::resource('divisi', DivisionController::class)->parameters(['divisi' => 'division'])
+        Route::resource('divisi', DivisionController::class)
+            ->parameters(['divisi' => 'division'])
             ->except(['show', 'create', 'edit']);
         Route::resource('user', UserController::class)
             ->except(['show', 'create', 'edit']);
-        Route::resource('pembimbing', MentorController::class)->parameters(['pembimbing' => 'mentor'])
+        Route::resource('pembimbing', MentorController::class)
+            ->parameters(['pembimbing' => 'mentor'])
             ->except(['show', 'create', 'edit']);
+        Route::resource('mahasiswa', AdminStudent::class)
+            ->parameters(['mahasiswa' => 'student'])
+            ->except(['create', 'store']);
+
+        Route::put('/members/{member}', [App\Http\Controllers\Admin\MemberController::class, 'update'])->name('members.update');
+        Route::delete('/members/{member}', [App\Http\Controllers\Admin\MemberController::class, 'destroy'])->name('members.destroy');
 
         Route::get('/surat', [LetterController::class, 'index'])
             ->name('surat.index');
@@ -134,6 +143,7 @@ Route::middleware(['auth', 'role:admin'])
             ->name('surat.update');
         Route::get('/surat/{registration}/show', [LetterController::class, 'show'])
             ->name('surat.show');
+
 
 });
 
