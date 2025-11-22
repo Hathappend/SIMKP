@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ArchiveController;
 use App\Http\Controllers\Admin\DivisionController;
 use App\Http\Controllers\Admin\LetterController;
 use App\Http\Controllers\admin\MentorController;
@@ -143,6 +144,9 @@ Route::middleware(['auth', 'role:admin'])
             ->name('surat.update');
         Route::get('/surat/{registration}/show', [LetterController::class, 'show'])
             ->name('surat.show');
+
+        Route::get('/arsip-dokumen', [ArchiveController::class, 'index'])
+            ->name('arsip.index');
 
 
 });
