@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Mahasiswa;
 
 use App\Http\Controllers\Controller;
 use App\Models\ReportProgress;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,7 +22,7 @@ class DashboardController extends Controller
 
         $registration = $student->registrations()
             ->with(['division', 'mentor'])
-            ->where('application_status', 'approved')
+            ->whereIn('application_status', ['approved', 'completed'])
             ->latest()
             ->first();
 
@@ -83,6 +84,33 @@ class DashboardController extends Controller
             ->orderBy('start_time', 'asc')
             ->get();
 
+        // ==========================================
+        // [BARU] SIAPKAN DATA NILAI TIM (GROUPING)
+        // ==========================================
+        $teamAssessments = collect([]);
+
+        // 1. Masukkan Nilai KETUA (Saya)
+        if ($registration->assessment) {
+            $teamAssessments->push((object)[
+                'name' => $student->name,
+                'nim' => $student->nim,
+                'role' => 'Ketua Tim',
+                'score' => $registration->assessment // Objek Assessment
+            ]);
+        }
+
+        // 2. Masukkan Nilai ANGGOTA (Looping)
+        foreach ($registration->members as $member) {
+            if ($member->assessment) {
+                $teamAssessments->push((object)[
+                    'name' => $member->name,
+                    'nim' => $member->nim,
+                    'role' => 'Anggota',
+                    'score' => $member->assessment // Objek Assessment
+                ]);
+            }
+        }
+
 
         return view('mahasiswa.dashboard', compact(
             'student',
@@ -93,7 +121,8 @@ class DashboardController extends Controller
             'workingDaysPassed',
             'totalAttendance',
             'attendancePercentage',
-            'todayLogbooks'
+            'todayLogbooks',
+            'teamAssessments'
         ));
     }
 
@@ -119,4 +148,20 @@ class DashboardController extends Controller
 
         return Storage::disk('public')->download($registration->reply_letter_path, $downloadName);
     }
+
+    public function downloadCertificate()
+    {
+        $student = Auth::user()->student;
+        $registration = $student->registrations()->where('application_status', 'completed')->latest()->first();
+
+        if (!$registration || !$registration->assessment || !$registration->assessment->certificate_path) {
+            return back()->with('error', 'Sertifikat belum tersedia.');
+        }
+
+        return Storage::disk('public')->download(
+            $registration->assessment->certificate_path,
+            'Sertifikat_Magang_' . $student->name . '.pdf'
+        );
+    }
+
 }

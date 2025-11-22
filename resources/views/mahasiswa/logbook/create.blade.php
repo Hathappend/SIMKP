@@ -20,12 +20,29 @@
                     <p class="text-gray-500 mt-1">Catat dan kelola riwayat aktivitas harian Anda.</p>
                 </div>
 
-                {{-- TOMBOL TAMBAH --}}
-                <button @click="modalLogbookAdd = true"
-                        class="inline-flex items-center px-5 py-2.5 bg-[#1B2A52] hover:bg-blue-900 text-white text-sm font-medium rounded-lg shadow-sm transition-all transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                    <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
-                    Tambah Logbook Baru
-                </button>
+                @if($registration->application_status == 'completed')
+
+                    {{-- MAGANG SELESAI (TERKUNCI) --}}
+                    <button disabled
+                            class="inline-flex items-center px-5 py-2.5 bg-gray-100 text-gray-400 text-sm font-medium rounded-lg border border-gray-200 cursor-not-allowed shadow-sm">
+                        <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                        Magang Selesai
+                    </button>
+
+                @else
+
+                    {{-- AKTIF (BISA TAMBAH) --}}
+                    <button @click="modalLogbookAdd = true"
+                            class="inline-flex items-center px-5 py-2.5 bg-[#1B2A52] hover:bg-blue-900 text-white text-sm font-medium rounded-lg shadow-sm transition-all transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                        Tambah Logbook Baru
+                    </button>
+
+                @endif
             </div>
 
             {{-- ALERT --}}
@@ -114,27 +131,42 @@
                                                      x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100"
                                                      x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95"
                                                      class="absolute right-0 z-20 mt-2 w-36 origin-top-right rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden" style="display: none;">
+
                                                     <div class="py-1">
+
                                                         {{-- TOMBOL EDIT --}}
                                                         <button type="button"
-                                                                @click="currentLogbook = {{ $log->toJson() }};
-                                                                if(currentLogbook.start_time) currentLogbook.start_time = currentLogbook.start_time.substring(0, 5);
-                                                                if(currentLogbook.end_time) currentLogbook.end_time = currentLogbook.end_time.substring(0, 5);
-                                                                editUrl = '{{ route('mahasiswa.logbook.update', $log->id) }}';
-                                                                modalLogbookEdit = true;
-                                                                open = false;"
-                                                                class="flex items-center w-full px-4 py-2 text-xs text-gray-700 hover:bg-gray-50 transition-colors">
-                                                            <svg class="w-3.5 h-3.5 mr-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                                                                @if($registration->application_status == 'completed')
+                                                                    disabled
+                                                                class="flex items-center w-full px-4 py-2 text-xs text-gray-300 cursor-not-allowed"
+                                                                @else
+                                                                    @click="currentLogbook = {{ $log->toJson() }};
+                                                                    if(currentLogbook.start_time) currentLogbook.start_time = currentLogbook.start_time.substring(0, 5);
+                                                                    if(currentLogbook.end_time) currentLogbook.end_time = currentLogbook.end_time.substring(0, 5);
+                                                                    editUrl = '{{ route('mahasiswa.logbook.update', $log->id) }}';
+                                                                    modalLogbookEdit = true;
+                                                                    open = false;"
+                                                                class="flex items-center w-full px-4 py-2 text-xs text-gray-700 hover:bg-gray-50 transition-colors"
+                                                            @endif
+                                                        >
+                                                            <svg class="w-3.5 h-3.5 mr-2 {{ $registration->application_status == 'completed' ? 'text-gray-300' : 'text-gray-400' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
                                                             Edit
                                                         </button>
 
                                                         {{-- TOMBOL HAPUS --}}
                                                         <button type="button"
-                                                                @click="currentLogbook = {{ $log->toJson() }}; deleteUrl = '{{ route('mahasiswa.logbook.destroy', $log->id) }}'; modalLogbookDelete = true; open = false;"
-                                                                class="flex w-full items-center px-4 py-2 text-xs text-red-600 hover:bg-red-50 transition-colors">
-                                                            <svg class="w-3.5 h-3.5 mr-2 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                                                @if($registration->application_status == 'completed')
+                                                                    disabled
+                                                                class="flex w-full items-center px-4 py-2 text-xs text-gray-300 cursor-not-allowed"
+                                                                @else
+                                                                    @click="currentLogbook = {{ $log->toJson() }}; deleteUrl = '{{ route('mahasiswa.logbook.destroy', $log->id) }}'; modalLogbookDelete = true; open = false;"
+                                                                class="flex w-full items-center px-4 py-2 text-xs text-red-600 hover:bg-red-50 transition-colors"
+                                                            @endif
+                                                        >
+                                                            <svg class="w-3.5 h-3.5 mr-2 {{ $registration->application_status == 'completed' ? 'text-gray-300' : 'text-red-400' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                                                             Hapus
                                                         </button>
+
                                                     </div>
                                                 </div>
                                             </div>

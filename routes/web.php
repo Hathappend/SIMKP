@@ -41,9 +41,12 @@ Route::middleware(['auth', 'role:mahasiswa'])
         Route::get('/dashboard', [MahasiswaDashboard::class, 'index'])
             ->name('dashboard');
 
-        // Download Surat Balasan (Fitur di Dashboard)
         Route::get('/surat-balasan/download', [MahasiswaDashboard::class, 'downloadLetter'])
             ->name('download-surat');
+        Route::get('/sertifikat/download', [MahasiswaDashboard::class, 'downloadCertificate'])
+            ->name('download-sertifikat');
+        Route::get('/transkrip/download', [MahasiswaDashboard::class, 'downloadTranscript'])
+            ->name('download-transkrip');
 
         Route::get('/kehadiran', [AttendanceController::class, 'index'])
             ->name('attendance.index');

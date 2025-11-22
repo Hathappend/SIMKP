@@ -28,6 +28,91 @@
                 @endif
             </div>
 
+            {{-- HASIL PENILAIAN TIM  --}}
+            @if($teamAssessments->count() > 0)
+                <div class="mb-10">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="p-2 bg-yellow-100 rounded-lg text-yellow-600">
+                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" /></svg>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-900">Hasil Penilaian Akhir</h2>
+                            <p class="text-sm text-gray-500">Selamat! Berikut adalah hasil penilaian untuk tim Anda.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+                        @foreach($teamAssessments as $result)
+                            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden relative group hover:shadow-md transition-all duration-300">
+
+                                <div class="h-2 bg-gradient-to-r from-[#1B2A52] to-blue-600"></div>
+
+                                <div class="p-6">
+                                    <div class="flex justify-between items-start">
+                                        {{-- Info Mahasiswa --}}
+                                        <div class="flex items-start gap-4">
+                                            <div class="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-bold text-lg border border-gray-200">
+                                                {{ substr($result->name, 0, 2) }}
+                                            </div>
+                                            <div>
+                                                <h4 class="text-base font-bold text-gray-900 line-clamp-1" title="{{ $result->name }}">{{ $result->name }}</h4>
+                                                <div class="flex items-center gap-2 mt-1">
+                                                    <span class="text-xs font-mono text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">{{ $result->nim }}</span>
+                                                    <span class="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded
+                                                    {{ $result->role == 'Ketua Tim' ? 'bg-indigo-50 text-indigo-600' : 'bg-gray-50 text-gray-500' }}">
+                                                    {{ $result->role }}
+                                                </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {{-- Grade Besar --}}
+                                        <div class="text-center">
+                                            <span class="block text-3xl font-extrabold text-[#1B2A52]">{{ $result->score->grade }}</span>
+                                            <span class="block text-[10px] text-gray-400 font-bold uppercase">Grade</span>
+                                        </div>
+                                    </div>
+
+                                    <hr class="my-4 border-gray-100 border-dashed">
+
+                                    {{-- Detail Nilai Ringkas --}}
+                                    <div class="grid grid-cols-3 gap-2 text-center mb-5">
+                                        <div class="bg-gray-50 rounded-lg p-2">
+                                            <span class="block text-[10px] text-gray-400 uppercase">Teknis</span>
+                                            <span class="font-bold text-gray-700">{{ $result->score->score_technical }}</span>
+                                        </div>
+                                        <div class="bg-gray-50 rounded-lg p-2">
+                                            <span class="block text-[10px] text-gray-400 uppercase">Disiplin</span>
+                                            <span class="font-bold text-gray-700">{{ $result->score->score_discipline }}</span>
+                                        </div>
+                                        <div class="bg-indigo-50 rounded-lg p-2 border border-indigo-100">
+                                            <span class="block text-[10px] text-indigo-400 uppercase">Total</span>
+                                            <span class="font-bold text-indigo-700">{{ $result->score->final_score }}</span>
+                                        </div>
+                                    </div>
+
+                                    {{-- Tombol Download --}}
+                                    @if($result->score->certificate_path)
+                                        <a href="{{ Storage::url($result->score->certificate_path) }}" target="_blank"
+                                           class="flex items-center justify-center w-full py-2.5 bg-white border border-gray-300 hover:border-indigo-300 hover:text-indigo-600 text-gray-700 font-bold text-sm rounded-xl transition-colors gap-2 shadow-sm">
+                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                                            Download Sertifikat
+                                        </a>
+                                    @else
+                                        <button disabled class="w-full py-2.5 bg-gray-100 text-gray-400 text-sm font-bold rounded-xl cursor-not-allowed">
+                                            Sertifikat Belum Terbit
+                                        </button>
+                                    @endif
+
+                                </div>
+                            </div>
+                        @endforeach
+
+                    </div>
+                </div>
+            @endif
+
             {{-- STATS GRID --}}
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
 

@@ -15,7 +15,7 @@ class ReportController extends Controller
     {
         $student = Auth::user()->student;
         $registration = $student->registrations()
-            ->where('application_status', 'approved')
+            ->whereIn('application_status', ['approved', 'completed'])
             ->latest()
             ->first();
 
