@@ -11,6 +11,7 @@ use App\Http\Controllers\Mahasiswa\ReportController as MahasiswaReport;
 use App\Http\Controllers\Mentor\ReportController as MentorReport;
 use App\Http\Controllers\Mentor\StudentController as MentorStudent;
 use App\Http\Controllers\Admin\StudentController as AdminStudent;
+use App\Http\Controllers\KepalaDivisi\StudentController as KepalaDivisiStudent;
 use App\Http\Controllers\Pembimbing\AssessmentController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -158,6 +159,7 @@ Route::middleware(['auth', 'role:kepala_divisi'])
 
         Route::get('/dashboard', [KepalaDivisiDashboard::class, 'index'])
             ->name('dashboard');
+
         Route::get('/pengajuan', [RegisterController::class, 'index'])
             ->name('pengajuan.index');
         Route::get('/pengajuan/detail/{registration}', [RegisterController::class, 'show'])
@@ -166,6 +168,11 @@ Route::middleware(['auth', 'role:kepala_divisi'])
             ->name('pengajuan.approve');
         Route::post('/pengajuan/{registration}/reject', [RegisterController::class, 'reject'])
             ->name('pengajuan.reject');
+
+        Route::get('/mahasiswa', [KepalaDivisiStudent::class, 'index'])
+            ->name('mahasiswa.index');
+        Route::get('/mahasiswa/{registration}', [KepalaDivisiStudent::class, 'show'])
+            ->name('mahasiswa.show');
 });
 
 require __DIR__.'/auth.php';
