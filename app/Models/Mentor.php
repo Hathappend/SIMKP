@@ -17,7 +17,9 @@ class Mentor extends Model
         'position',
         'division_id',
         'user_id',
-        'email'
+        'email',
+        'nip',
+        'phone_number',
     ];
 
     public function division(): BelongsTo
