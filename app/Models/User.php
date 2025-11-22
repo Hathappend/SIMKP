@@ -25,7 +25,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'division_id'
+        'division_id',
+        'avatar',
+        'temp_password',
+        'password_change_token',
     ];
 
     /**

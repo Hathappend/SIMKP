@@ -117,7 +117,7 @@
                          x-transition
                          class="absolute right-0 mt-3 w-44 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50">
 
-                        <a href="#" class="flex items-center px-4 py-2.5 text-gray-700 hover:bg-gray-50 transition rounded-lg text-sm gap-2">
+                        <a href="{{ route("profile.edit") }}" class="flex items-center px-4 py-2.5 text-gray-700 hover:bg-gray-50 transition rounded-lg text-sm gap-2">
                             <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                       d="M5.121 17.804A4 4 0 0112 15.5a4 4 0 016.879 2.304M12 12a4 4 0 100-8 4 4 0 000 8z" />

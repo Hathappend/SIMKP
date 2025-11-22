@@ -35,6 +35,16 @@ Route::get('/', function () {
 // KP Registration
 Route::get('/registrasi', [RegistrationController::class, 'create'])->name('registration.create');
 Route::post('/registrasi', [RegistrationController::class, 'store'])->name('registration.store');
+Route::get('/profile/verify-password/{token}', [App\Http\Controllers\ProfileController::class, 'verifyPassword'])
+    ->name('profile.password.verify');
+
+Route::middleware(['auth'])->group(function () {
+
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
+    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy'); // Jika ada fitur hapus akun sendiri
+});
 
 Route::middleware(['auth', 'role:mahasiswa'])
     ->prefix('mahasiswa')
@@ -63,9 +73,6 @@ Route::middleware(['auth', 'role:mahasiswa'])
         Route::post('/laporan}', [MahasiswaReport::class, 'update'])
             ->name('laporan.update');
 
-        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 Route::middleware(['auth', 'role:pembimbing'])
