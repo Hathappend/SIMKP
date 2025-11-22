@@ -184,6 +184,16 @@
             </svg>
             <span>Verifikasi Pengajuan</span>
         </a>
+
+        <a href="{{ route("kadiv.mahasiswa.index") }}"
+           class="flex items-center space-x-3 py-3 px-4 rounded-lg transition
+           {{ request()->is('kadiv/mahasiswa*') ? 'bg-[#1B2A52] text-white' : 'hover:bg-[#1B2A52] hover:text-white' }}">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                      d="M12 4.5v6h6M14 3H6v18h12V9l-4-6z" />
+            </svg>
+            <span>Data Mahasiswa</span>
+        </a>
         @endrole
 
         @role('mahasiswa')
