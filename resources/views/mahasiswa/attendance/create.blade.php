@@ -89,9 +89,24 @@
                         </div>
 
                         <div class="mt-6 pt-4 border-t border-gray-100 flex justify-end">
-                            <button type="submit" class="px-6 py-2.5 bg-[#1B2A52] text-white font-medium rounded-lg shadow-sm hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all">
-                                Kirim Kehadiran
-                            </button>
+
+                            @if($registration->application_status == 'completed')
+                                {{-- JIKA SUDAH SELESAI: Tombol Mati (Disabled) --}}
+                                <div class="flex items-center gap-3">
+                                    <span class="text-xs text-red-500 font-medium">Masa magang telah berakhir.</span>
+                                    <button type="button" disabled
+                                            class="px-6 py-2.5 bg-gray-100 text-gray-400 font-medium rounded-lg cursor-not-allowed border border-gray-200">
+                                        <svg class="w-4 h-4 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                                        Form Terkunci
+                                    </button>
+                                </div>
+                            @else
+                                {{-- JIKA BELUM SELESAI: Tombol Aktif --}}
+                                <button type="submit" class="px-6 py-2.5 bg-[#1B2A52] text-white font-medium rounded-lg shadow-sm hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all">
+                                    Kirim Kehadiran
+                                </button>
+                            @endif
+
                         </div>
                     </form>
                 @endif

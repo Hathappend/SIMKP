@@ -24,7 +24,9 @@ class AttendanceController extends Controller
             ->orderBy('date', 'desc')
             ->paginate(10);
 
-        return view('mahasiswa.attendance.create', compact('todayAttendance', 'history'));
+        $registration = $student->registrations()->latest()->first();
+
+        return view('mahasiswa.attendance.create', compact('todayAttendance', 'history', 'registration'));
     }
 
     public function store(Request $request): RedirectResponse

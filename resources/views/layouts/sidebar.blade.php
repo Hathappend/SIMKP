@@ -189,7 +189,7 @@
         @role('mahasiswa')
         <a href="{{ route('mahasiswa.dashboard') }}"
            class="flex items-center space-x-3 py-3 px-4 rounded-lg transition
-           {{ request()->is('dashboard') ? 'bg-white/10 text-white font-semibold' : 'text-gray-300 hover:bg-white/5' }}">
+           {{ request()->is('mahasiswa/dashboard') ? 'bg-white/10 text-white font-semibold' : 'text-gray-300 hover:bg-white/5' }}">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
             </svg>
@@ -199,9 +199,8 @@
         <a href="{{ route("mahasiswa.attendance.index") }}"
            class="flex items-center space-x-3 py-3 px-4 rounded-lg transition
            {{ request()->is('mahasiswa/kehadiran*') ? 'bg-[#1B2A52] text-white' : 'hover:bg-[#1B2A52] hover:text-white' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                      d="M3 7h5l2 2h11v9H3z" />
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z" />
             </svg>
             <span>Kehadiran</span>
         </a>
@@ -209,9 +208,8 @@
         <a href="{{ route("mahasiswa.logbook.index") }}"
            class="flex items-center space-x-3 py-3 px-4 rounded-lg transition
            {{ request()->is('mahasiswa/logbook*') ? 'bg-[#1B2A52] text-white' : 'hover:bg-[#1B2A52] hover:text-white' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                      d="M3 7h5l2 2h11v9H3z" />
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
             </svg>
             <span>Logbook</span>
         </a>
@@ -219,10 +217,10 @@
         <a href="{{ route("mahasiswa.laporan.index") }}"
            class="flex items-center space-x-3 py-3 px-4 rounded-lg transition
            {{ request()->is('mahasiswa/laporan*') ? 'bg-[#1B2A52] text-white' : 'hover:bg-[#1B2A52] hover:text-white' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                      d="M3 7h5l2 2h11v9H3z" />
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m18.375 12.739-7.693 7.693a4.5 4.5 0 0 1-6.364-6.364l10.94-10.94A3 3 0 1 1 19.5 7.372L8.552 18.32m.009-.01-.01.01m5.699-9.941-7.81 7.81a1.5 1.5 0 0 0 2.112 2.13" />
             </svg>
+
             <span>Laporan</span>
         </a>
         @endrole

@@ -27,7 +27,9 @@ class LogbookController extends Controller
             return Carbon::parse($item->date)->translatedFormat('l, d F Y');
         });
 
-        return view('mahasiswa.logbook.create', compact('groupedLogbooks'));
+        $registration = $student->registrations()->latest()->first();
+
+        return view('mahasiswa.logbook.create', compact('groupedLogbooks', 'registration'));
     }
 
     public function store(Request $request): RedirectResponse
