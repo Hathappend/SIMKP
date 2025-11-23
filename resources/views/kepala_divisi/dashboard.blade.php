@@ -132,9 +132,22 @@
                                 @php
                                     $start = \Carbon\Carbon::parse($intern->start_date);
                                     $end = \Carbon\Carbon::parse($intern->end_date);
+                                    $now = now();
+
+                                    // Hitung Total Durasi
                                     $total = $start->diffInDays($end) + 1;
-                                    $passed = now()->diffInDays($start) + 1;
-                                    $percent = min(100, round(($passed / $total) * 100));
+
+                                    // Hitung Hari Berjalan dengan Kondisi Batas
+                                    if ($now->lessThan($start)) {
+                                        $passed = 0;
+                                    } elseif ($now->greaterThan($end)) {
+                                        $passed = $total;
+                                    } else {
+                                        $passed = $start->diffInDays($now) + 1;
+                                    }
+
+                                    // Hitung Persen
+                                    $percent = ($total > 0) ? round(($passed / $total) * 100) : 0;
                                 @endphp
 
                                 <div class="w-full bg-gray-100 rounded-full h-1.5 mb-1">

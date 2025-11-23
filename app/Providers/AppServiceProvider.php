@@ -28,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
             $pendingGradingCount = 0;
             $pendingRegistrationCount = 0;
             $pendingLetterCount = 0;
+            $pendingVerificationCount = 0;
 
             if (Auth::check()) {
                 $user = Auth::user();
@@ -63,12 +64,24 @@ class AppServiceProvider extends ServiceProvider
                         ->where('letter_status', 'waiting')
                         ->count();
                 }
+
+                // ==========================================
+                // KEPALA DIVISI
+                // ==========================================
+                if ($user->hasRole('kepala_divisi') || $user->hasRole('kadiv')) {
+                    if ($user->division_id) {
+                        $pendingVerificationCount = Registration::where('division_id', $user->division_id)
+                            ->where('application_status', 'waiting')
+                            ->count();
+                    }
+                }
             }
 
             $view->with('pendingReportCount', $pendingReportCount);
             $view->with('pendingGradingCount', $pendingGradingCount);
             $view->with('pendingRegistrationCount', $pendingRegistrationCount);
             $view->with('pendingLetterCount', $pendingLetterCount);
+            $view->with('pendingVerificationCount', $pendingVerificationCount);
         });
     }
 }
