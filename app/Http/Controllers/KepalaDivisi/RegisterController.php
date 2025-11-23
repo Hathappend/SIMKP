@@ -22,13 +22,23 @@ class RegisterController extends Controller
     {
         $user = Auth::user();
 
-        $applications = Registration::with('student')
-            ->where('application_status', 'waiting')
+        $query = Registration::with(['student', 'mentor'])
             ->where('division_id', $user->division_id)
-            ->latest()
+            ->where('application_status', '!=', 'pending');
+
+        // Hitung Statistik
+        $stats = [
+            'waiting'  => (clone $query)->where('application_status', 'waiting')->count(),
+            'approved' => (clone $query)->where('application_status', 'approved')->count(),
+            'rejected' => (clone $query)->where('application_status', 'rejected')->count(),
+        ];
+
+        $applications = $query
+            ->orderByRaw("FIELD(application_status, 'waiting', 'approved', 'rejected') ASC")
+            ->latest('updated_at')
             ->get();
 
-        return view('kepala_divisi.registration.create', compact('applications'));
+        return view('kepala_divisi.registration.create', compact('applications', 'stats'));
     }
 
     public function show(Registration $registration): View

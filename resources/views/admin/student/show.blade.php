@@ -15,7 +15,7 @@
          }">
 
         {{-- HEADER PROFIL --}}
-        <div class="bg-white border-b border-gray-200 sticky top-0 z-20 shadow-sm">
+        <div class="border-b border-gray-200 ">
             <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
                 {{-- Breadcrumb --}}
