@@ -26,26 +26,49 @@ class AppServiceProvider extends ServiceProvider
         View::composer('*', function ($view) {
             $pendingReportCount = 0;
             $pendingGradingCount = 0;
+            $pendingRegistrationCount = 0;
+            $pendingLetterCount = 0;
 
-            if (Auth::check() && Auth::user()->hasRole('pembimbing') && Auth::user()->mentor) {
-                $mentorId = Auth::user()->mentor->id;
+            if (Auth::check()) {
+                $user = Auth::user();
 
-                // Hitung Laporan Pending
-                $pendingReportCount = Registration::where('mentor_id', $mentorId)
-                    ->where('report_status', 'submitted')
-                    ->count();
+                // ==========================================
+                // PEMBIMBING
+                // ==========================================
+                if ($user->hasRole('pembimbing') && $user->mentor) {
+                    $mentorId = $user->mentor->id;
 
-                // Hitung Penilaian Pending
-                $pendingGradingCount = Registration::where('mentor_id', $mentorId)
-                    ->whereIn('application_status', ['approved', 'completed'])
-                    ->whereDate('end_date', '<=', Carbon::now()->addDays(7))
-                    ->doesntHave('assessment')
-                    ->count();
+                    // Hitung Laporan Pending
+                    $pendingReportCount = Registration::where('mentor_id', $mentorId)
+                        ->where('report_status', 'submitted')
+                        ->count();
+
+                    // Hitung Penilaian Pending
+                    $pendingGradingCount = Registration::where('mentor_id', $mentorId)
+                        ->whereIn('application_status', ['approved', 'completed'])
+                        ->whereDate('end_date', '<=', Carbon::now()->addDays(7))
+                        ->doesntHave('assessment')
+                        ->count();
+                }
+
+                // ==========================================
+                // ADMIN
+                // ==========================================
+                if ($user->hasRole('admin')) {
+                    // Hitung pendaftaran baru yang belum diverifikasi
+                    $pendingRegistrationCount = Registration::where('application_status', 'pending')->count();
+
+                    // Surat Belum Dibuat (Approved tapi Waiting)
+                    $pendingLetterCount = Registration::where('application_status', 'approved')
+                        ->where('letter_status', 'waiting')
+                        ->count();
+                }
             }
 
-            // Kirim kedua variabel ke View
             $view->with('pendingReportCount', $pendingReportCount);
             $view->with('pendingGradingCount', $pendingGradingCount);
+            $view->with('pendingRegistrationCount', $pendingRegistrationCount);
+            $view->with('pendingLetterCount', $pendingLetterCount);
         });
     }
 }

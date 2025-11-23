@@ -22,11 +22,21 @@ class UserController extends Controller
 {
     public function index(): View
     {
-        $users = User::with('division', 'roles')->latest()->get();
+        $users = User::with(['roles', 'division', 'mentor', 'student'])->latest()->get();
         $divisions = Division::orderBy('name')->get();
         $roles = Role::whereIn('name', ['admin', 'kepala_divisi'])->get();
+        $getAllRoles = Role::all();
 
-        return view('admin.user.create', compact('users', 'divisions', 'roles'));
+        // Hitung Statistik
+        $stats = [
+            'total' => $users->count(),
+            'admin' => $users->filter(fn($u) => $u->hasRole('admin'))->count(),
+            'kadiv' => $users->filter(fn($u) => $u->hasRole('kepala_divisi'))->count(),
+            'mentor' => $users->filter(fn($u) => $u->hasRole('pembimbing'))->count(),
+            'student' => $users->filter(fn($u) => $u->hasRole('mahasiswa'))->count(),
+        ];
+
+        return view('admin.user.create', compact('users', 'divisions', 'roles', 'getAllRoles', 'stats'));
     }
 
     public function store(Request $request): RedirectResponse

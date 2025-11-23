@@ -58,26 +58,6 @@ class RegisterController extends Controller
             // 'approved_at' => now(),
         ]);
 
-        $studentId = $registration->student_id;
-
-        // Inisialisasi Tahapan Laporan
-        $stages = [
-            ['key' => 'tahap1', 'label' => 'Laporan Tahap 1 (Bab 1)', 'status' => 'ongoing'],
-            ['key' => 'tahap2', 'label' => 'Laporan Tahap 2 (Bab 2)', 'status' => 'locked'],
-            ['key' => 'tahap3', 'label' => 'Laporan Tahap 3 (Bab 3)', 'status' => 'locked'],
-            ['key' => 'tahap4', 'label' => 'Laporan Tahap 4 (Bab 4)', 'status' => 'locked'],
-            ['key' => 'full',   'label' => 'Laporan Akhir Lengkap (Full)', 'status' => 'locked'],
-        ];
-
-        foreach ($stages as $stage) {
-            \App\Models\ReportProgress::create([
-                'student_id' => $studentId,
-                'stage_key' => $stage['key'],
-                'stage_label' => $stage['label'],
-                'status' => $stage['status']
-            ]);
-        }
-
         $student = $registration->student;
         $rawPassword = null;
 
