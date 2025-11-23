@@ -89,7 +89,7 @@
                                         @endif
                                     </div>
 
-                                    <a href="{{ route('pembimbing.penilaian.add', $reg->id) }}" class="block w-full py-2.5 bg-red-600 hover:bg-red-700 text-white text-center text-sm font-bold rounded-lg transition-colors shadow-sm">
+                                    <a href="{{ route('pembimbing.penilaian.create', $reg->id) }}" class="block w-full py-2.5 bg-red-600 hover:bg-red-700 text-white text-center text-sm font-bold rounded-lg transition-colors shadow-sm">
                                         Input Nilai Sekarang
                                     </a>
                                 </div>

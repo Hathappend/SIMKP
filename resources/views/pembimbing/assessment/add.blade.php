@@ -4,7 +4,7 @@
     <div class="min-h-screen bg-gray-50/50 pb-20">
 
         {{-- HEADER --}}
-        <div class="bg-white border-b border-gray-200 pt-8 pb-6">
+        <div class="border-b border-gray-200 pt-8 pb-6">
             <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="mb-4">
                     <a href="{{ route('pembimbing.penilaian.index') }}" class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-indigo-600">
