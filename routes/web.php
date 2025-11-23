@@ -3,8 +3,8 @@
 use App\Http\Controllers\Admin\ArchiveController;
 use App\Http\Controllers\Admin\DivisionController;
 use App\Http\Controllers\Admin\LetterController;
-use App\Http\Controllers\admin\MentorController;
-use App\Http\Controllers\admin\UserController;
+use App\Http\Controllers\Admin\MentorController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Mahasiswa\AttendanceController;
 use App\Http\Controllers\Mahasiswa\LogbookController;
 use App\Http\Controllers\Mahasiswa\ReportController as MahasiswaReport;
@@ -70,7 +70,7 @@ Route::middleware(['auth', 'role:mahasiswa'])
 
         Route::get('/laporan', [MahasiswaReport::class, 'index'])
             ->name('laporan.index');
-        Route::post('/laporan}', [MahasiswaReport::class, 'update'])
+        Route::post('/laporan', [MahasiswaReport::class, 'update'])
             ->name('laporan.update');
 
 });

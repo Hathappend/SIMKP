@@ -24,10 +24,21 @@ class StudentController extends Controller
         $students = Registration::with(['student', 'division', 'attendances', 'logbooks'])
             ->where('mentor_id', $mentor->id)
             ->whereIn('application_status', ['approved', 'completed'])
-            ->latest()
+            ->withCount(['logbooks as pending_logbooks_count' => function ($query) {
+                $query->where('status', 'pending');
+            }])
+            ->latest('start_date')
             ->get();
 
-        return view('pembimbing.student.create', compact('students'));
+        // Hitung Statistik
+        $stats = [
+            'total' => $students->count(),
+            'active' => $students->where('application_status', 'approved')->count(),
+            'total_pending_logbooks' => $students->sum('pending_logbooks_count'),
+            'pending_reports' => $students->where('report_status', 'submitted')->count(),
+        ];
+
+        return view('pembimbing.student.create', compact('students', 'stats'));
     }
 
     public function show(Registration $registration)

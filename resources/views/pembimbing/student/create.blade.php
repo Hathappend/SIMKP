@@ -4,13 +4,60 @@
     <div class="min-h-screen bg-gray-50/50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
-            {{-- HEADER  --}}
-            <div class="flex flex-col md:flex-row justify-between items-end md:items-center mb-6 gap-4">
+            <div class="mb-8">
+                <h1 class="text-2xl font-bold text-gray-800 tracking-tight">Mahasiswa Bimbingan</h1>
+                <p class="text-gray-500 mt-1">Pantau progres dan aktivitas mahasiswa bimbingan Anda.</p>
+            </div>
 
-                <div class="w-full md:w-auto">
-                    <h1 class="text-2xl font-bold text-gray-800 tracking-tight">Mahasiswa Bimbingan</h1>
-                    <p class="text-gray-500 mt-1">Pantau progres dan aktivitas mahasiswa bimbingan Anda.</p>
+            {{-- 1. STATISTIK (ACTION CENTER) --}}
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+
+                {{-- Card 1: Total Mahasiswa --}}
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 flex items-center gap-4">
+                    <div class="p-3 bg-indigo-50 text-indigo-600 rounded-xl">
+                        <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Mahasiswa</p>
+                        <h3 class="text-2xl font-bold text-gray-900">{{ $stats['total'] }} <span class="text-sm font-normal text-gray-500">Orang</span></h3>
+                    </div>
                 </div>
+
+                {{-- Card 2: Logbook Perlu Review (Kuning jika ada tugas) --}}
+                <div class="p-5 rounded-xl shadow-sm border flex items-center gap-4 transition-colors
+                 {{ $stats['total_pending_logbooks'] > 0 ? 'bg-yellow-50 border-yellow-200' : 'bg-white border-gray-200' }}">
+                    <div class="p-3 rounded-xl {{ $stats['total_pending_logbooks'] > 0 ? 'bg-yellow-100 text-yellow-700' : 'bg-gray-100 text-gray-400' }}">
+                        <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-wider {{ $stats['total_pending_logbooks'] > 0 ? 'text-yellow-700' : 'text-gray-400' }}">
+                            Logbook Pending
+                        </p>
+                        <h3 class="text-2xl font-bold {{ $stats['total_pending_logbooks'] > 0 ? 'text-yellow-800' : 'text-gray-900' }}">
+                            {{ $stats['total_pending_logbooks'] }} <span class="text-sm font-normal opacity-70">Item</span>
+                        </h3>
+                    </div>
+                </div>
+
+                {{-- Card 3: Laporan Akhir (Biru jika ada tugas) --}}
+                <div class="p-5 rounded-xl shadow-sm border flex items-center gap-4 transition-colors
+                 {{ $stats['pending_reports'] > 0 ? 'bg-blue-50 border-blue-200' : 'bg-white border-gray-200' }}">
+                    <div class="p-3 rounded-xl {{ $stats['pending_reports'] > 0 ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-400' }}">
+                        <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-wider {{ $stats['pending_reports'] > 0 ? 'text-blue-700' : 'text-gray-400' }}">
+                            Review Laporan
+                        </p>
+                        <h3 class="text-2xl font-bold {{ $stats['pending_reports'] > 0 ? 'text-blue-800' : 'text-gray-900' }}">
+                            {{ $stats['pending_reports'] }} <span class="text-sm font-normal opacity-70">Dokumen</span>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+
+            {{-- HEADER  --}}
+            <div class="flex flex-col md:flex-row justify-end items-end md:items-center mb-6 gap-4">
 
                 {{-- FILTER BAR --}}
                 <div class="flex items-center gap-3 w-full md:w-auto justify-end">
@@ -119,7 +166,7 @@
                                     </span>
                                 @else
                                     <span class="px-2 inline-flex text-[10px] font-semibold rounded-full bg-blue-100 text-blue-800 mt-1">
-                                        Sisa {{ $now->diffInDays($end) }} hari
+                                        Sisa {{ round($now->diffInDays($end)) }} hari
                                     </span>
                                 @endif
                             </td>
