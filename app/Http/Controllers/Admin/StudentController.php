@@ -14,9 +14,24 @@ class StudentController extends Controller
 {
     public function index(): View
     {
-        $students = Student::with('user')->latest()->get();
 
-        return view('admin.student.create', compact('students'));
+        $students = Student::with(['user', 'registrations.division'])
+            ->latest()
+            ->get();
+
+        // Statistik untuk Card
+        $stats = [
+            'total' => $students->count(),
+            'active_magang' => $students->filter(function($s) {
+                return $s->registrations->first()?->application_status === 'approved';
+            })->count(),
+            'completed_magang' => $students->filter(function($s) {
+                return $s->registrations->first()?->application_status === 'completed';
+            })->count(),
+            'universities' => $students->unique('university')->count(),
+        ];
+
+        return view('admin.student.create', compact('students', 'stats'));
     }
 
     public function store(Request $request):RedirectResponse

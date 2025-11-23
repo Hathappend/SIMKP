@@ -14,13 +14,22 @@ class LetterController extends Controller
 {
     public function index(): View
     {
-        $applications = Registration::with(['student', 'division', 'mentor', 'members'])
-            ->where('application_status', 'approved')
-            ->orderBy('letter_status', 'asc')
-            ->latest()
+        $query = Registration::with(['student', 'division', 'mentor'])
+            ->where('application_status', 'approved');
+
+        // Hitung Statistik
+        $stats = [
+            'total' => (clone $query)->count(),
+            'waiting' => (clone $query)->where('letter_status', 'waiting')->count(), // Belum Dibuat
+            'completed' => (clone $query)->where('letter_status', 'completed')->count(), // Selesai
+        ];
+
+        $applications = $query
+            ->orderByRaw("FIELD(letter_status, 'waiting', 'in progress', 'completed') ASC")
+            ->latest('updated_at')
             ->get();
 
-        return view('admin.surat.create', compact('applications'));
+        return view('admin.surat.create', compact('applications', 'stats'));
     }
 
     /**

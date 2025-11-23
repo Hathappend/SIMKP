@@ -14,11 +14,19 @@ class RegistarVerification extends Controller
 {
     public function create(): View
     {
+        $stats = [
+            'pending' => Registration::where('application_status', 'pending')->count(),
+            'waiting' => Registration::where('application_status', 'waiting')->count(),
+            'approved' => Registration::where('application_status', 'approved')->count(),
+            'rejected' => Registration::where('application_status', 'rejected')->count(),
+        ];
+
         $applications = Registration::with(['student', 'division'])
+        ->orderByRaw("FIELD(application_status, 'pending', 'waiting', 'approved', 'rejected')")
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('admin.pengajuan_magang', compact('applications'));
+        return view('admin.pengajuan_magang', compact('applications', 'stats'));
     }
 
     public function show($id): View

@@ -14,16 +14,24 @@ class MentorController extends Controller
 {
     public function index(): View
     {
-        $mentors = Mentor::with('division')
-            ->withCount(['students' => function ($query) {
-                $query->where('application_status', 'approved');
+
+        $mentors = Mentor::with(['division', 'user'])
+            ->withCount(['students as active_students_count' => function($q) {
+                $q->where('application_status', 'approved');
             }])
             ->latest()
             ->get();
 
         $divisions = Division::orderBy('name')->get();
 
-        return view('admin.pembimbing.create', compact('mentors', 'divisions'));
+        // Hitung Statistik
+        $stats = [
+            'total_mentors'   => $mentors->count(),
+            'total_students'  => $mentors->sum('active_students_count'),
+            'missing_account' => $mentors->whereNull('user_id')->count(),
+        ];
+
+        return view('admin.pembimbing.create', compact('mentors', 'divisions', 'stats'));
     }
 
     public function store(Request $request): RedirectResponse

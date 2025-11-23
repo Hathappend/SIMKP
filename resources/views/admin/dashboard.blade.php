@@ -150,6 +150,8 @@
                                     <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-green-100 text-green-700">Aktif</span>
                                 @elseif($reg->application_status == 'completed')
                                     <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-gray-100 text-gray-700">Selesai</span>
+                                @elseif($reg->application_status == 'waiting')
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-yellow-100 text-yellow-700">Ditinjau</span>
                                 @else
                                     <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-100 text-red-700">Tolak</span>
                                 @endif

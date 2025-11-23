@@ -13,9 +13,20 @@ class DivisionController extends Controller
 {
     public function index(): View
     {
-        $divisions = Division::latest()->get();
+        $divisions = Division::withCount(['registrations as active_interns_count' => function ($query) {
+            $query->where('application_status', 'approved');
+        }])
+            ->latest()
+            ->get();
 
-        return view('admin.division.create', compact('divisions'));
+        // Hitung Statistik
+        $stats = [
+            'total_divisions' => $divisions->count(),
+            'total_active_interns' => $divisions->sum('active_interns_count'),
+            'most_popular' => $divisions->sortByDesc('active_interns_count')->first(),
+        ];
+
+        return view('admin.division.create', compact('divisions', 'stats'));
     }
 
     public function store(Request $request): RedirectResponse
