@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', "Pengajuan Magang")
 @section('content')
 
     <div class="min-h-screen bg-gray-50/30">
