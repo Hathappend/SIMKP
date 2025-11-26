@@ -29,6 +29,8 @@ WORKDIR /var/www
 # 6. Copy file project
 COPY . .
 
+COPY database/certs/isrgrootx1.pem /etc/ssl/certs/isrgrootx1.pem
+
 # 7. Install Dependensi PHP
 RUN composer install --no-dev --optimize-autoloader
 
