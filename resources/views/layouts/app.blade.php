@@ -17,7 +17,7 @@
             showMobileSearch: false,
             isMobile() { return window.innerWidth < 768 }
         }"
-    class="flex h-screen"
+    class="flex"
 >
 
     <div

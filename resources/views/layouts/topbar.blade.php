@@ -144,9 +144,14 @@
                          class="flex items-center space-x-3 cursor-pointer select-none">
 
                         <!-- AVATAR -->
-                        <img class="w-9 h-9 rounded-full object-cover shadow"
-                             src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name ?? 'User') }}&background=random"
-                             alt="Avatar">
+                        {{-- Foto Profil Mini --}}
+                        @if(Auth::user()->avatar)
+                            <img src="{{ Storage::url(Auth::user()->avatar) }}" class="w-8 h-8 rounded-full object-cover border border-gray-600">
+                        @else
+                            <img class="w-9 h-9 rounded-full object-cover shadow"
+                                 src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name ?? 'User') }}&background=random"
+                                 alt="Avatar">
+                        @endif
 
                         <!-- NAME & ROLE: Hanya tampil desktop -->
                         <div class="text-sm leading-tight hidden md:block">
@@ -154,7 +159,7 @@
                                 {{ Auth::user()->name ?? 'User' }}
                             </p>
                             <p class="text-xs text-gray-500 capitalize">
-                                {{ Auth::user()->getRoleNames()->first() ?? 'Role' }}
+                                {{ Str::title(str_replace('_', ' ', Auth::user()->getRoleNames()->first())) ?? 'Role' }}
                             </p>
                         </div>
 

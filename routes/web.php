@@ -30,31 +30,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/manual-setup', function () {
-    try {
-        // 1. Link Storage (Agar gambar muncul)
-        Artisan::call('storage:link');
-        $output = "Storage Link: Berhasil.<br>";
-
-        // 2. Migrate Database
-        Artisan::call('migrate --force');
-        $output .= "Migrasi Database: Berhasil.<br>";
-
-        // 3. Seeding Data (Isi data awal admin dll)
-        // Pastikan seeder Anda aman (pakai updateOrCreate) agar tidak duplikat jika direfresh
-        Artisan::call('db:seed --force');
-        $output .= "Seeding Data: Berhasil.<br>";
-
-        // 4. Clear Cache (Jaga-jaga)
-        Artisan::call('optimize:clear');
-        $output .= "Cache Cleared.<br>";
-
-        return $output . "<br><strong>SETUP SELESAI!</strong> Silakan hapus route ini.";
-
-    } catch (\Exception $e) {
-        return "Terjadi Error: " . $e->getMessage();
-    }
-});
 //Route::get('/dashboard', function () {
 //    return view('dashboard');
 //})->middleware(['auth', 'verified'])->name('dashboard');
