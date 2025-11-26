@@ -190,7 +190,7 @@
 
             <div class="text-center text-sm text-gray-600 mt-2">
                 Sudah memiliki akun?
-                <a href="" class="text-gray-900 font-medium hover:underline hover:text-gray-700 transition">
+                <a href="{{ route('registration.create') }}" class="text-gray-900 font-medium hover:underline hover:text-gray-700 transition">
                     Masuk di sini
                 </a>
             </div>
