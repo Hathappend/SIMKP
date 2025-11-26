@@ -6,10 +6,13 @@ use App\Mail\RegistrationConfirmation;
 use App\Models\Division;
 use App\Models\Registration;
 use App\Models\Student;
+use App\Models\User;
+use App\Notifications\NewRegistrationNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
@@ -51,7 +54,7 @@ class RegistrationController extends Controller
         }
 
         try {
-            DB::transaction(function () use ($request, $internshipPath, $kesbangpolPath) {
+            $registration = DB::transaction(function () use ($request, $internshipPath, $kesbangpolPath) {
 
                 $student = Student::updateOrCreate(
                     ['nim' => $request->nim],
@@ -63,7 +66,8 @@ class RegistrationController extends Controller
                     ]
                 );
 
-                Registration::create([
+                // 2. Tambahkan 'return' di sini
+                return Registration::create([
                     'student_id' => $student->id,
                     'division_id' => $request->division_id,
                     'start_date' => $request->start_date,
@@ -79,10 +83,14 @@ class RegistrationController extends Controller
 
             Mail::to($request->email)->send(new RegistrationConfirmation($request->full_name));
 
+            $admins = User::role('admin')->get();
+            Notification::send($admins, new NewRegistrationNotification($registration));
+
             return redirect()->back()->with('success', 'Pendaftaran berhasil! Silakan cek email Anda untuk konfirmasi.');
 
         } catch (\Exception $e) {
              Storage::delete($internshipPath);
+            Storage::delete($kesbangpolPath);
 
             return redirect()->back()
                 ->withInput()

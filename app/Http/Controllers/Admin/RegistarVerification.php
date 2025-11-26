@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Mail\RejectionMail;
 use App\Models\Registration;
+use App\Models\User;
+use App\Notifications\NewVerificationRequestNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\View\View;
 
 class RegistarVerification extends Controller
@@ -46,6 +49,14 @@ class RegistarVerification extends Controller
             'application_status' => 'waiting'
         ]);
 
+        $kadiv = User::role('kepala_divisi')
+        ->where('division_id', $registration->division_id)
+            ->get();
+
+        if ($kadiv->count() > 0) {
+            Notification::send($kadiv, new NewVerificationRequestNotification($registration));
+        }
+
         return redirect()->back()->with('success', 'Pengajuan telah disetujui dan diteruskan ke Kepala Divisi.');
     }
 
@@ -70,7 +81,6 @@ class RegistarVerification extends Controller
         try {
 
             $studentEmail = $registration->student->email;
-
             Mail::to($studentEmail)->send(new RejectionMail($registration));
 
         } catch (\Exception $e) {

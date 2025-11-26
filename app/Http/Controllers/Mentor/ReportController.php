@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Mentor;
 
 use App\Http\Controllers\Controller;
 use App\Models\Registration;
+use App\Notifications\ReportApprovedNotification;
+use App\Notifications\ReportRevisionNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -45,6 +47,11 @@ class ReportController extends Controller
             'report_status' => 'approved',
             'report_feedback' => null
         ]);
+
+        if ($registration->student->user) {
+            $registration->student->user->notify(new ReportApprovedNotification());
+        }
+
         return back()->with('success', 'Laporan disetujui.');
     }
 
@@ -56,6 +63,11 @@ class ReportController extends Controller
             'report_status' => 'revision',
             'report_feedback' => $request->feedback
         ]);
+
+        if ($registration->student->user) {
+            $registration->student->user->notify(new ReportRevisionNotification($registration));
+        }
+
         return back()->with('success', 'Laporan dikembalikan untuk revisi.');
     }
 }

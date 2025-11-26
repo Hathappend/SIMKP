@@ -89,7 +89,18 @@
                                     ['value' => 'approved', 'label' => 'Sudah ACC'],
                                     ['value' => 'none', 'label' => 'Belum Upload'],
                                 ]
-                            ]
+                            ],
+                            // Filter Logbook
+                            [
+                                'key' => 'logbook_status',
+                                'label' => 'Status Logbook',
+                                'type' => 'checkbox-list',
+                                'open' => true,
+                                'options' => [
+                                    ['value' => 'has_pending', 'label' => 'Perlu Review'],
+                                    ['value' => 'clean', 'label' => 'Sudah Bersih'],
+                                ]
+                            ],
                         ];
                     @endphp
 
@@ -118,6 +129,7 @@
                             $start = \Carbon\Carbon::parse($reg->start_date);
                             $end = \Carbon\Carbon::parse($reg->end_date);
                             $now = now();
+                            $logbookStatusKey = ($reg->pending_logbooks_count > 0) ? 'has_pending' : 'clean';
 
                             if ($now->lessThan($start)) {
                                 $periodStatusKey = 'not_started';
@@ -133,7 +145,8 @@
                             data-university="{{ strtolower($reg->student->university) }}"
                             data-study_program="{{ strtolower($reg->student->study_program) }}"
                             data-period_status="{{ $periodStatusKey }}"
-                            data-report_status="{{ $reg->report_status ? strtolower($reg->report_status) : 'none' }}">
+                            data-report_status="{{ $reg->report_status ? strtolower($reg->report_status) : 'none' }}"
+                            data-logbook_status="{{ $logbookStatusKey }}">
 
                             {{-- INFO MAHASISWA --}}
                             <td class="px-6 py-4">
@@ -193,10 +206,10 @@
                                 @php
                                     $pendingLogbooks = $reg->logbooks->where('status', 'pending')->count();
                                 @endphp
-                                @if($pendingLogbooks > 0)
+                                @if($reg->pending_logbooks_count > 0)
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
                                         <svg class="mr-1.5 h-2 w-2 text-yellow-400" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" /></svg>
-                                        {{ $pendingLogbooks }} Perlu Review
+                                        {{ $reg->pending_logbooks_count }} Perlu Review
                                     </span>
                                 @else
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
@@ -204,7 +217,7 @@
                                         Up to date
                                     </span>
                                 @endif
-                                <div class="text-xs text-gray-400 mt-1">Total: {{ $reg->logbooks->count() }} Kegiatan</div>
+                                <div class="text-xs text-gray-400 mt-1">Total: {{ $reg->pending_logbooks_count }} Kegiatan</div>
                             </td>
 
                             {{-- LAPORAN --}}

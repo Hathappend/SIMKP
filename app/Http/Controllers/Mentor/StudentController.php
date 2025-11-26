@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Mentor;
 use App\Http\Controllers\Controller;
 use App\Models\Logbook;
 use App\Models\Registration;
+use App\Notifications\LogbookApprovedNotification;
+use App\Notifications\LogbookRejectedNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,6 +26,9 @@ class StudentController extends Controller
         $students = Registration::with(['student', 'division', 'attendances', 'logbooks'])
             ->where('mentor_id', $mentor->id)
             ->whereIn('application_status', ['approved', 'completed'])
+            ->withCount(['logbooks as pending_logbooks_count' => function ($query) {
+                $query->where('status', 'pending');
+            }])
             ->withCount(['logbooks as pending_logbooks_count' => function ($query) {
                 $query->where('status', 'pending');
             }])
@@ -90,6 +95,10 @@ class StudentController extends Controller
         }
 
         $logbook->update(['status' => 'approved', 'feedback' => null]);
+
+        if ($logbook->student->user) {
+            $logbook->student->user->notify(new LogbookApprovedNotification($logbook));
+        }
         return back()->with('success', 'Logbook disetujui.');
     }
 
@@ -101,6 +110,10 @@ class StudentController extends Controller
             'status' => 'rejected',
             'feedback' => $request->feedback
         ]);
+
+        if ($logbook->student->user) {
+            $logbook->student->user->notify(new LogbookRejectedNotification($logbook));
+        }
 
         return back()->with('success', 'Logbook ditolak dan catatan terkirim.');
     }

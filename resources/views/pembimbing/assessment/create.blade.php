@@ -180,7 +180,7 @@
                                         Lihat Detail
                                     </a>
                                 @else
-                                    <a href="{{ route('pembimbing.penilaian.add', $reg->id) }}" class="inline-flex items-center px-3 py-1.5 bg-[#1B2A52] text-white text-xs font-bold rounded hover:bg-blue-900 transition-colors shadow-sm">
+                                    <a href="{{ route('pembimbing.penilaian.create', $reg->id) }}" class="inline-flex items-center px-3 py-1.5 bg-[#1B2A52] text-white text-xs font-bold rounded hover:bg-blue-900 transition-colors shadow-sm">
                                         Input Nilai
                                     </a>
                                 @endif
