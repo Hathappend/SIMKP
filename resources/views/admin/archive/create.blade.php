@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', "Arsip Dokumen")
 @section('content')
     <div class="min-h-screen bg-gray-50/30">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">

@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', "Kelola Data Divisi")
 @section('content')
 
     <div x-data="{

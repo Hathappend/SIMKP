@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', "Kelola Logbook")
 @section('content')
     {{-- Alpine.js state untuk modal tambah, edit, dan delete --}}
     <div x-data="{

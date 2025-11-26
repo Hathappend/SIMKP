@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', "Upload Laporan")
 @section('content')
     <div class="min-h-screen bg-gray-100/50">
         <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">

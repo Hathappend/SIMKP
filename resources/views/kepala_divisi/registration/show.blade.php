@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', "Detail Pengajuan Magang")
 @section('content')
     <div class="min-h-screen " x-data="{ modalApprove: false, modalReject: false }">
 
