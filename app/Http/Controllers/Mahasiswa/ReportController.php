@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Mahasiswa;
 
 use App\Http\Controllers\Controller;
+use App\Notifications\NewReportNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,7 +27,7 @@ class ReportController extends Controller
         return view('mahasiswa.report.create', compact('registration'));
     }
 
-    public function update(Request $request)
+    public function update(Request $request): RedirectResponse
     {
         $student = Auth::user()->student;
         $registration = $student->registrations()
@@ -54,6 +55,10 @@ class ReportController extends Controller
             'report_status' => 'submitted',
             'report_feedback' => null,
         ]);
+
+        if ($registration->mentor && $registration->mentor->user) {
+            $registration->mentor->user->notify(new NewReportNotification($registration));
+        }
 
         return redirect()->back()->with('success', 'Laporan berhasil diupload. Menunggu review pembimbing.');
     }

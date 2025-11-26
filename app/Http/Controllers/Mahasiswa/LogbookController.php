@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Mahasiswa;
 
 use App\Http\Controllers\Controller;
 use App\Models\Logbook;
+use App\Notifications\NewLogbookNotification;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -54,7 +55,7 @@ class LogbookController extends Controller
                 ->withInput();
         }
 
-        Logbook::create([
+        $logbook = Logbook::create([
             'student_id'  => $student->id,
             'date'        => $request->date,
             'start_time'  => $request->start_time,
@@ -63,6 +64,15 @@ class LogbookController extends Controller
             'description' => $request->description,
             'status'      => 'pending',
         ]);
+
+        $registration = $student->registrations()
+            ->where('application_status', 'approved')
+            ->latest()
+            ->first();
+
+        if ($registration && $registration->mentor && $registration->mentor->user) {
+            $registration->mentor->user->notify(new NewLogbookNotification($logbook));
+        }
 
         return redirect()->route('mahasiswa.logbook.index')->with('success', 'Logbook kegiatan berhasil ditambahkan!');
     }

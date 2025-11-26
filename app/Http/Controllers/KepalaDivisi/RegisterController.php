@@ -8,11 +8,14 @@ use App\Mail\RejectionMail;
 use App\Models\Mentor;
 use App\Models\Registration;
 use App\Models\User;
+use App\Notifications\LetterRequestNotification;
+use App\Notifications\RegistrationStatusNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
@@ -93,12 +96,22 @@ class RegisterController extends Controller
             }
         }
 
-        // Kirim Email
         try {
+            $registration->refresh();
+            $registration->load('student.user');
+
             $studentEmail = $registration->student->email;
             Mail::to($studentEmail)->send(new RegistrationApproved($registration, $rawPassword));
 
+            if ($registration->student->user) {
+                $registration->student->user->notify(new RegistrationStatusNotification($registration));
+            }
+
+            $admins = User::role('admin')->get();
+            Notification::send($admins, new LetterRequestNotification($registration));
+
         } catch (\Exception $e) {
+            dd($e->getMessage(), $e->getFile(), $e->getLine());
             return redirect()->route('kadiv.pengajuan.index')
                 ->with('success', 'Pengajuan diterima, namun email gagal terkirim.');
         }

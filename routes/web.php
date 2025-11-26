@@ -12,6 +12,7 @@ use App\Http\Controllers\Mentor\ReportController as MentorReport;
 use App\Http\Controllers\Mentor\StudentController as MentorStudent;
 use App\Http\Controllers\Admin\StudentController as AdminStudent;
 use App\Http\Controllers\KepalaDivisi\StudentController as KepalaDivisiStudent;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Pembimbing\AssessmentController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -33,17 +34,39 @@ Route::get('/', function () {
 //})->middleware(['auth', 'verified'])->name('dashboard');
 
 // KP Registration
-Route::get('/registrasi', [RegistrationController::class, 'create'])->name('registration.create');
-Route::post('/registrasi', [RegistrationController::class, 'store'])->name('registration.store');
+Route::get('/registrasi', [RegistrationController::class, 'create'])
+    ->name('registration.create');
+Route::post('/registrasi', [RegistrationController::class, 'store'])
+    ->name('registration.store');
 Route::get('/profile/verify-password/{token}', [App\Http\Controllers\ProfileController::class, 'verifyPassword'])
     ->name('profile.password.verify');
 
 Route::middleware(['auth'])->group(function () {
 
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
-    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy'); // Jika ada fitur hapus akun sendiri
+    Route::get('/profile', [ProfileController::class, 'edit'])
+        ->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])
+        ->name('profile.update');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])
+        ->name('profile.password');
+
+    Route::get('/notification/{id}', [NotificationController::class, 'open'])
+        ->name('notifications.open');
+    Route::get('/notifications/read-all', [NotificationController::class, 'markAllRead'])
+        ->name('notifications.readAll');
+
+    Route::get('/api/notifications/check', function () {
+        $user = auth()->user();
+
+        $notifications = $user->unreadNotifications;
+
+        $html = view('layouts.partials.notification_list', compact('notifications'))->render();
+
+        return response()->json([
+            'count' => $notifications->count(),
+            'html'  => $html
+        ]);
+    })->name('api.notifications.check');
 });
 
 Route::middleware(['auth', 'role:mahasiswa'])
