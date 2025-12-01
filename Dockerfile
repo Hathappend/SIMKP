@@ -42,14 +42,14 @@ RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 RUN chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
 # 10. Jalankan Perintah Utama
-#CMD php artisan optimize:clear \
-#    && php artisan storage:link \
-#    && php artisan migrate --force \
-#    && php artisan serve --host=0.0.0.0 --port=$PORT
-
 CMD php artisan optimize:clear \
-    && php artisan migrate:fresh --force \
-    && php artisan db:seed --force \
     && php artisan storage:link \
+    && php artisan migrate --force \
     && php artisan serve --host=0.0.0.0 --port=$PORT
+
+#CMD php artisan optimize:clear \
+#    && php artisan migrate:fresh --force \
+#    && php artisan db:seed --force \
+#    && php artisan storage:link \
+#    && php artisan serve --host=0.0.0.0 --port=$PORT
 

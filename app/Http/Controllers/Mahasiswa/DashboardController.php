@@ -71,7 +71,7 @@ class DashboardController extends Controller
 
         $attendancePercentage = 0;
         if ($workingDaysPassed > 0) {
-            $attendancePercentage = round(($totalAttendance / $workingDaysPassed) * 100);
+            $attendancePercentage = round(($totalAttendance / $totalDurationDays) * 100);
         }
         $attendancePercentage = min(100, $attendancePercentage);
 
@@ -122,7 +122,8 @@ class DashboardController extends Controller
             'totalAttendance',
             'attendancePercentage',
             'todayLogbooks',
-            'teamAssessments'
+            'teamAssessments',
+            'totalDurationDays'
         ));
     }
 

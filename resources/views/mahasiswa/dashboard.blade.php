@@ -171,7 +171,7 @@
                             </div>
                             {{-- Target Hari Kerja s/d Hari Ini --}}
                             <span class="text-sm text-gray-400 mb-1.5">
-                            Target: {{ $workingDaysPassed }} Hari Kerja
+                            Target: {{ $totalDurationDays }} Hari Kerja
                         </span>
                         </div>
 
